@@ -1,10 +1,9 @@
-
-       <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SME Smart Parser - Manual Calculator Edition</title>
+    <title>SME Smart Parser - Real-Time Manual Entry Edition</title>
     <style>
         body { background-color: #0b131f; color: #ffffff; font-family: sans-serif; padding: 20px; text-align: center; }
         .box { background: #111926; border: 1px solid #1e293b; padding: 20px; border-radius: 8px; max-width: 600px; margin: 20px auto; text-align: left; }
@@ -14,7 +13,6 @@
         table { width: 100%; font-size: 13px; margin-top: 15px; border-collapse: collapse; }
         th, td { border-bottom: 1px solid #334155; padding: 10px; text-align: left; }
         .editable { background: #1e293b; border-radius: 4px; padding: 4px 8px; color: #38bdf8; font-family: monospace; font-weight: bold; outline: none; }
-        .editable:focus { border: 1px solid #38bdf8; }
         .total-box { margin-top: 15px; padding-top: 10px; border-top: 1px solid #334155; font-size: 13px; }
         .total-row { display: flex; justify-content: space-between; margin-bottom: 5px; color: #94a3b8; }
     </style>
@@ -22,39 +20,30 @@
 <body>
 
     <h1 style="text-align: center;">SME Smart Parser</h1>
-    <p style="color: #94a3b8; font-size: 12px; text-align: center;">Malaysia LHDN Edition (Interactive Calculator)</p>
+    <p style="color: #94a3b8; font-size: 12px; text-align: center;">Malaysia LHDN Edition (Real-Time Parser)</p>
 
     <div class="box">
-        <h3>1. AI Extraction Input</h3>
-        <textarea id="rawInput" placeholder="Paste text here or click 'Load Sample'..."></textarea>
+        <h3>1. Input Data</h3>
+        <textarea id="rawInput" placeholder="Type items manually using the format: 2x Chair - RM700"></textarea>
         <button id="loadBtn" type="button">💡 Load Sample</button>
         <button id="extractBtn" type="button" style="background: #0ea5e9;">⚡ AI Extract</button>
     </div>
 
     <div class="box">
-        <h3>2. Extracted Calculations</h3>
-        <p style="font-size: 11px; color: #a1a1aa; margin-bottom: 10px;">👉 <em>Tip: You can tap and change any blue number below to calculate your own figures!</em></p>
+        <h3>2. Extracted Results</h3>
         <table>
             <thead>
                 <tr>
                     <th>ITEM DESCRIPTION</th>
                     <th style="text-align: center; width: 80px;">QTY</th>
-                    <th style="text-align: right; width: 110px;">UNIT PRICE (RM)</th>
-                    <th style="text-align: right; width: 110px;">TOTAL (RM)</th>
+                    <th style="text-align: right; width: 120px;">TOTAL (RM)</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
-                <!-- Initial placeholder item row that the user can edit immediately -->
-                <tr class="item-row">
-                    <td contenteditable="true" style="outline: none;">Custom Item A</td>
-                    <td class="editable qty-cell" contenteditable="true" style="text-align: center;">1</td>
-                    <td class="editable price-cell" contenteditable="true" style="text-align: right;">0.00</td>
-                    <td class="row-total" style="text-align: right; font-family: monospace; font-weight: bold;">0.00</td>
-                </tr>
+                <tr><td colspan="3" style="color:#475569; text-align:center;">Empty</td></tr>
             </tbody>
         </table>
 
-        <!-- Live Calculation Summaries -->
         <div class="total-box">
             <div class="total-row">
                 <span>Subtotal:</span>
@@ -72,86 +61,68 @@
     </div>
 
     <div class="box">
-        <h3>3. Professional Support</h3>
-        <p style="font-size:12px; color:#94a3b8;">Need automated background workflows for bulk PDF receipts?</p>
+        <h3>3. Support</h3>
         <a href="https://whatsapp.com" target="_blank" class="wa-btn">
-            Connect via WhatsApp for Custom Setup
+            Connect via WhatsApp
         </a>
     </div>
 
     <script>
         var input = document.getElementById('rawInput');
         var tbody = document.getElementById('tableBody');
-        
         var subtotalVal = document.getElementById('subtotalVal');
         var sstVal = document.getElementById('sstVal');
         var grandTotalVal = document.getElementById('grandTotalVal');
 
-        // Function to run math formulas across the table layout rows
-        function calculateTotals() {
-            var rows = document.getElementsByClassName('item-row');
-            var currentSubtotal = 0;
-
-            for (var i = 0; i < rows.length; i++) {
-                var qty = parseFloat(rows[i].querySelector('.qty-cell').innerText) || 0;
-                var unitPrice = parseFloat(rows[i].querySelector('.price-cell').innerText) || 0;
-                
-                var rowTotal = qty * unitPrice;
-                currentSubtotal += rowTotal;
-                
-                rows[i].querySelector('.row-total').innerText = rowTotal.toFixed(2);
-            }
-
-            var currentSst = currentSubtotal * 0.06;
-            var currentGrand = currentSubtotal + currentSst;
-
-            subtotalVal.innerText = "RM " + currentSubtotal.toFixed(2);
-            sstVal.innerText = "RM " + currentSst.toFixed(2);
-            grandTotalVal.innerText = "RM " + currentGrand.toFixed(2);
-        }
-
-        // Listen for user keyboard inputs anywhere inside the data table body
-        tbody.addEventListener('input', function(e) {
-            if (e.target.classList.contains('qty-cell') || e.target.classList.contains('price-cell')) {
-                calculateTotals();
-            }
-        });
-
-        // Sample loader button trigger actions
         document.getElementById('loadBtn').onclick = function() {
-            input.value = "Ahmad Enterprise (SST-12345)\n2x Premium Office Chair - RM350 each\n1x Ergonomic Desk - RM890\nDelivery to Selangor office - RM50";
+            input.value = "Ahmad Enterprise\n2x Office Chair - RM700\n1x Desk - RM890\n3X Shelf - RM1900";
         };
 
-        // Extraction data generator loop
         document.getElementById('extractBtn').onclick = function() {
-            if(!input.value.trim()) return alert("Please type text or load a sample first!");
-            
-            // Overwrite table content with structured dataset rows containing dynamic editable listener hooks
-            tbody.innerHTML = 
-                '<tr class="item-row">' +
-                    '<td contenteditable="true" style="outline: none;">Premium Office Chair</td>' +
-                    '<td class="editable qty-cell" contenteditable="true" style="text-align: center;">2</td>' +
-                    '<td class="editable price-cell" contenteditable="true" style="text-align: right;">350.00</td>' +
-                    '<td class="row-total" style="text-align: right; font-family: monospace; font-weight: bold;">700.00</td>' +
-                '</tr>' +
-                '<tr class="item-row">' +
-                    '<td contenteditable="true" style="outline: none;">Ergonomic Desk</td>' +
-                    '<td class="editable qty-cell" contenteditable="true" style="text-align: center;">1</td>' +
-                    '<td class="editable price-cell" contenteditable="true" style="text-align: right;">890.00</td>' +
-                    '<td class="row-total" style="text-align: right; font-family: monospace; font-weight: bold;">890.00</td>' +
-                '</tr>' +
-                '<tr class="item-row">' +
-                    '<td contenteditable="true" style="outline: none;">Delivery Charge (Exempt)</td>' +
-                    '<td class="editable qty-cell" contenteditable="true" style="text-align: center;">1</td>' +
-                    '<td class="editable price-cell" contenteditable="true" style="text-align: right;">50.00</td>' +
-                    '<td class="row-total" style="text-align: right; font-family: monospace; font-weight: bold;">50.00</td>' +
-                '</tr>';
-            
-            calculateTotals();
-        };
+            var text = input.value.trim();
+            if (!text) return alert("Please type text or load a sample first!");
 
-        // Run initial calculations on page setup load
-        calculateTotals();
+            var lines = text.split('\n');
+            var html = '';
+            var subtotal = 0;
+            var itemFound = false;
+
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
+                
+                // Matches formats like "2x Item Name - RM700" or "3X Shelf -RM1900"
+                var match = line.match(/^(\d+)\s*[xX]\s*(.+?)\s*-\s*[rR][mM]\s*(\d+)$/);
+                
+                if (match) {
+                    itemFound = true;
+                    var qty = parseInt(match[1]);
+                    var itemName = match[2];
+                    var totalPrice = parseFloat(match[3]);
+                    
+                    subtotal += totalPrice;
+
+                    html += '<tr class="item-row">' +
+                                '<td style="color: #f1f5f9; font-weight: 500;">' + itemName + '</td>' +
+                                '<td style="text-align: center; color: #94a3b8; font-family: monospace;">' + qty + '</td>' +
+                                '<td style="text-align: right; color: #f1f5f9; font-family: monospace; font-weight: 600;">' + totalPrice.toFixed(2) + '</td>' +
+                            '</tr>';
+                }
+            }
+
+            if (!itemFound) {
+                alert("Could not extract items. Please use the format:\n2x Item Name - RM700");
+                return;
+            }
+
+            tbody.innerHTML = html;
+
+            var sst = subtotal * 0.06;
+            var grand = subtotal + sst;
+
+            subtotalVal.innerText = "RM " + subtotal.toFixed(2);
+            sstVal.innerText = "RM " + sst.toFixed(2);
+            grandTotalVal.innerText = "RM " + grand.toFixed(2);
+        };
     </script>
 </body>
 </html>
