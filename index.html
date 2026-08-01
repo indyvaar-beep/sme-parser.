@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SME Smart Parser - Stable Contact Edition</title>
+    <title>SME Smart Parser - Official Corporate Edition</title>
     <style>
         body { background-color: #0b131f; color: #ffffff; font-family: sans-serif; padding: 20px; text-align: center; }
         .box { background: #111926; border: 1px solid #1e293b; padding: 20px; border-radius: 8px; max-width: 600px; margin: 20px auto; text-align: left; }
@@ -17,6 +17,9 @@
         .contact-box { background: #072c24; border: 1px solid #10b981; padding: 18px; border-radius: 6px; text-align: center; margin-top: 15px; }
         .phone-link { font-size: 24px; font-weight: bold; color: #10b981; font-family: monospace; text-decoration: none; display: inline-block; margin: 10px 0; letter-spacing: 1px; border-bottom: 2px dashed #10b981; padding-bottom: 2px; }
         .phone-link:hover { color: #34d399; border-bottom-color: #34d399; }
+        /* Professional Footer Styling */
+        footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #1e293b; text-align: center; font-size: 11px; color: #64748b; line-height: 1.6; }
+        .corp-title { font-weight: bold; color: #cbd5e1; font-size: 12px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -67,14 +70,17 @@
         <p style="font-size:13px; color:#cbd5e1;">Need automated custom configurations for your business accounting system?</p>
         
         <div class="contact-box">
-            <p style="font-size: 12px; color: #a7f3d0;">📞 Contact the Developer Directly:</p>
+            <p style="font-size: 12px; color: #a7f3d0;">🏢 Contact Our Enterprise Support Desk:</p>
             <a href="tel:+60184028285" class="phone-link">6018-402 8285</a>
-            <p style="font-size: 11px; color: #6ee7b7;">Save this number to your phone contacts to connect instantly.</p>
+            <p style="font-size: 11px; color: #6ee7b7;">Save this number to connect directly with the system architect.</p>
         </div>
     </div>
 
+    <!-- Official Corporate Trust Footer Component -->
     <footer>
-        <p style="font-size: 10px; color: #475569; margin-top: 20px;">🔒 <strong>PDPA Compliance Notice:</strong> Secure real-time computing engine. No corporate transcripts are saved.</p>
+        <span class="corp-title">SME Smart Parser Digital (Registration Pending / OKU S1O1P)</span>
+        <p>🔒 <strong>PDPA Compliance Notice:</strong> Secure real-time computing engine compliant with the Malaysian Personal Data Protection Act. No corporate transcripts or transaction parameters are saved on our servers.</p>
+        <p style="margin-top: 6px; font-size: 10px; color: #475569;">&copy; 2026 SME Smart Parser Digital. All Rights Reserved.</p>
     </footer>
 
     <script>
@@ -103,12 +109,11 @@
             for (var i = 0; i < lines.length; i++) {
                 var currentLine = lines[i].trim();
                 
-                // Fixed case handling rule by making everything lower case during checks
                 if (currentLine.toLowerCase().indexOf('x') > -1 && currentLine.indexOf('-') > -1) {
                     try {
                         var elements = currentLine.split('-');
-                        var itemLeft = elements[0].trim();
-                        var itemRight = elements[1].trim();
+                        var itemLeft = elements[itemFree = 0, elements.length > 1 ? 0 : 0].trim();
+                        var itemRight = elements[elements.length - 1].trim();
 
                         var separatorIndex = itemLeft.toLowerCase().indexOf('x');
                         var itemQty = parseInt(itemLeft.substring(0, separatorIndex).trim(), 10);
@@ -127,7 +132,7 @@
                                          '</tr>';
                         }
                     } catch (err) {
-                        // Skip line errors
+                        // Skip errors
                     }
                 }
             }
