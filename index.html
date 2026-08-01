@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SME Smart Parser - Contact Edition</title>
+    <title>SME Smart Parser - Stable Contact Edition</title>
     <style>
         body { background-color: #0b131f; color: #ffffff; font-family: sans-serif; padding: 20px; text-align: center; }
         .box { background: #111926; border: 1px solid #1e293b; padding: 20px; border-radius: 8px; max-width: 600px; margin: 20px auto; text-align: left; }
@@ -14,8 +14,10 @@
         th, td { border-bottom: 1px solid #334155; padding: 10px; text-align: left; }
         .total-box { margin-top: 15px; padding-top: 10px; border-top: 1px solid #334155; font-size: 13px; }
         .total-row { display: flex; justify-content: space-between; margin-bottom: 5px; color: #94a3b8; }
-        .contact-box { background: #072c24; border: 1px solid #10b981; padding: 15px; border-radius: 6px; text-align: center; margin-top: 15px; }
-        .phone-display { font-size: 24px; font-weight: bold; color: #10b981; font-family: monospace; display: block; margin: 10px 0; letter-spacing: 1px; }
+        .contact-box { background: #072c24; border: 1px solid #10b981; padding: 18px; border-radius: 6px; text-align: center; margin-top: 15px; }
+        /* Clean clickable styling for your direct phone stream */
+        .phone-link { font-size: 24px; font-weight: bold; color: #10b981; font-family: monospace; text-decoration: none; display: inline-block; margin: 10px 0; letter-spacing: 1px; border-bottom: 2px dashed #10b981; padding-bottom: 2px; }
+        .phone-link:hover { color: #34d399; border-bottom-color: #34d399; }
     </style>
 </head>
 <body>
@@ -65,11 +67,11 @@
         <h3>3. Support & Licensing</h3>
         <p style="font-size:13px; color:#cbd5e1;">Need automated custom configurations for your business accounting system?</p>
         
-        <!-- CLEAR VISUAL PLAIN TEXT CONTACT NUMBER INFO BOX -->
         <div class="contact-box">
-            <p style="font-size: 12px; color: #a7f3d0;">💬 Contact the Developer Directly via WhatsApp:</p>
-            <span class="phone-display">011-8402 8285</span>
-            <p style="font-size: 11px; color: #6ee7b7;">Save this number to your phone contacts to chat.</p>
+            <p style="font-size: 12px; color: #a7f3d0;">📞 Contact the Developer Directly:</p>
+            <!-- Native tel link structure prevents WhatsApp web redirect loops entirely -->
+            <a href="tel:+601184028285" class="phone-link">011-8402 8285</a>
+            <p style="font-size: 11px; color: #6ee7b7;">Save this number to your phone contacts to connect instantly.</p>
         </div>
     </div>
 
