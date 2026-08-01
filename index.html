@@ -1,29 +1,149 @@
-<!-- WhatsApp Contact Integration Block -->
-<div class="whatsapp-chat-container" style="font-family: sans-serif; max-width: 400px; margin: 20px auto; padding: 20px; border-radius: 12px; background-color: #121b22; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-    <div style="display: flex; align-items: center; margin-bottom: 16px;">
-        <!-- Secure Brand Anchor Asset -->
-        <div style="width: 48px; height: 48px; background-color: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.455L0 24zm6.59-4.846c1.66.986 3.288 1.479 5.357 1.48 5.513 0 10.003-4.479 10.006-9.985.001-2.667-1.031-5.176-2.906-7.054C17.131 1.716 14.634.686 12.01.686c-5.522 0-10.01 4.48-10.014 9.987-.002 2.13.553 3.821 1.6 5.514l-.994 3.635 3.73-.974z"/>
-            </svg>
-        </div>
-        <div>
-            <h3 style="margin: 0; font-size: 16px; color: #e9edef;">SME Parser Assistant</h3>
-            <p style="margin: 2px 0 0 0; font-size: 12px; color: #8696a0;">Typically replies instantly</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SME Smart Parser - Stable 2026 Edition</title>
+    <style>
+        body { background-color: #0b131f; color: #ffffff; font-family: sans-serif; padding: 20px; text-align: center; }
+        .box { background: #111926; border: 1px solid #1e293b; padding: 20px; border-radius: 8px; max-width: 600px; margin: 20px auto; text-align: left; }
+        textarea { width: 100%; height: 120px; background: #090d16; color: #fff; border: 1px solid #334155; padding: 10px; margin-bottom: 10px; font-family: monospace; font-size: 12px; resize: none; outline: none; }
+        button { background: #10b981; color: #000; border: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; margin-bottom: 10px; }
+        .wa-btn { display: block; background: #00cc66; color: #fff; text-decoration: none; padding: 12px; font-weight: bold; border-radius: 4px; margin-top: 15px; text-align: center; font-size: 14px; width: 100%; }
+        table { width: 100%; font-size: 13px; margin-top: 15px; border-collapse: collapse; }
+        th, td { border-bottom: 1px solid #334155; padding: 10px; text-align: left; }
+        .total-box { margin-top: 15px; padding-top: 10px; border-top: 1px solid #334155; font-size: 13px; }
+        .total-row { display: flex; justify-content: space-between; margin-bottom: 5px; color: #94a3b8; }
+    </style>
+</head>
+<body>
+
+    <h1>SME Smart Parser</h1>
+    <p style="color: #94a3b8; font-size: 12px;">Malaysia LHDN Edition</p>
+
+    <div class="box">
+        <h3>1. Input Data</h3>
+        <textarea id="rawInput" placeholder="Type items manually using the format: 2x Chair - RM700"></textarea>
+        <button id="loadSampleBtn" type="button">💡 Load Sample</button>
+        <button id="extractBtn" type="button" style="background: #0ea5e9;">⚡ AI Extract</button>
+    </div>
+
+    <div class="box">
+        <h3>2. Extracted Results</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ITEM DESCRIPTION</th>
+                    <th style="text-align: center; width: 80px;">QTY</th>
+                    <th style="text-align: right; width: 120px;">TOTAL (RM)</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="3" style="color:#475569; text-align:center;">Empty</td></tr>
+            </tbody>
+        </table>
+
+        <div class="total-box">
+            <div class="total-row">
+                <span>Subtotal:</span>
+                <span id="subtotalVal" style="font-family: monospace; color: #ffffff;">RM 0.00</span>
+            </div>
+            <div class="total-row">
+                <span>SST Component (6%):</span>
+                <span id="sstVal" style="font-family: monospace; color: #fb923c;">RM 0.00</span>
+            </div>
+            <div class="total-row" style="border-top: 1px dashed #334155; padding-top: 8px; font-weight: bold; color: #10b981; font-size: 15px;">
+                <span>Grand Total:</span>
+                <span id="grandTotalVal" style="font-family: monospace;">RM 0.00</span>
+            </div>
         </div>
     </div>
 
-    <div style="background-color: #0b141a; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; line-height: 1.4; color: #e9edef;">
-        Hello! Need help parsing your Malaysia LHDN data? Click below to send your extracted results directly over to our WhatsApp support line.
+    <div class="box">
+        <h3>3. Support</h3>
+        <p style="font-size:12px; color:#94a3b8; margin-bottom: 5px;">Need automated background workflows or bulk PDF processing?</p>
+        
+        <!-- BULLETPROOF DIRECT LINK WITH NO INTERMEDIATE JS SCRIPTS -->
+        <a href="https://wa.me." 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="wa-btn">
+            Connect via WhatsApp
+        </a>
     </div>
 
-    <!-- Action Link Formulated with Safe Window Targeting Attributes -->
-    <a href="https://wa.me/60123456789?text=Hello%20SME%20Parser%20Support%2C%20I%20need%20assistance%20with%20my%20LHDN%20data." 
-       target="_blank" 
-       rel="noopener noreferrer" 
-       style="display: flex; align-items: center; justify-content: center; background-color: #00a884; color: white; text-decoration: none; padding: 12px; border-radius: 24px; font-weight: bold; font-size: 15px; transition: background 0.2s;"
-       onmouseover="this.style.backgroundColor='#008f72'"
-       onmouseout="this.style.backgroundColor='#00a884'">
-        Connect via WhatsApp
-    </a>
-</div>
+    <footer>
+        <p style="font-size: 10px; color: #475569; margin-top: 20px;">🔒 <strong>PDPA Compliance Notice:</strong> Secure real-time computing engine. No corporate transcripts are saved.</p>
+    </footer>
+
+    <script>
+        var rawInput = document.getElementById('rawInput');
+        var tableBody = document.getElementById('tableBody');
+        var subtotalVal = document.getElementById('subtotalVal');
+        var sstVal = document.getElementById('sstVal');
+        var grandTotalVal = document.getElementById('grandTotalVal');
+
+        document.getElementById('loadSampleBtn').onclick = function() {
+            rawInput.value = "Ahmad Enterprise\n2x Office Chair - RM700\n1x Desk - RM890\n3x Shelf - RM1900\n4x Computer - RM4000";
+        };
+
+        document.getElementById('extractBtn').onclick = function() {
+            var text = rawInput.value.trim();
+            if (!text) {
+                alert("Please type text or load a sample first!");
+                return;
+            }
+
+            var lines = text.split('\n');
+            var htmlOutput = '';
+            var runningSubtotal = 0;
+            var itemFound = false;
+
+            for (var i = 0; i < lines.length; i++) {
+                var currentLine = lines[i].trim();
+                
+                if (currentLine.toLowerCase().indexOf('x') > -1 && currentLine.indexOf('-') > -1) {
+                    try {
+                        var elements = currentLine.split('-');
+                        var itemLeft = elements[0].trim();
+                        var itemRight = elements[1].trim();
+
+                        var separatorIndex = itemLeft.toLowerCase().indexOf('x');
+                        var itemQty = parseInt(itemLeft.substring(0, separatorIndex).trim(), 10);
+                        var itemName = itemLeft.substring(separatorIndex + 1).trim();
+
+                        var itemPrice = parseFloat(itemRight.toLowerCase().replace('rm', '').trim());
+
+                        if (!isNaN(itemQty) && !isNaN(itemPrice)) {
+                            itemFound = true;
+                            runningSubtotal += itemPrice;
+
+                            htmlOutput += '<tr>' +
+                                            '<td style="color: #f1f5f9; font-weight: 500;">' + itemName + '</td>' +
+                                            '<td style="text-align: center; color: #94a3b8; font-family: monospace;">' + itemQty + '</td>' +
+                                            '<td style="text-align: right; color: #f1f5f9; font-family: monospace; font-weight: 600;">' + itemPrice.toFixed(2) + '</td>' +
+                                         '</tr>';
+                        }
+                    } catch (err) {
+                        // Skip line errors
+                    }
+                }
+            }
+
+            if (!itemFound) {
+                alert("Could not extract items. Please use the format:\n2x Item Name - RM700");
+                return;
+            }
+
+            tableBody.innerHTML = htmlOutput;
+
+            var sstAmount = runningSubtotal * 0.06;
+            var grandTotalAmount = runningSubtotal + sstAmount;
+
+            subtotalVal.innerText = "RM " + runningSubtotal.toFixed(2);
+            sstVal.innerText = "RM " + sstAmount.toFixed(2);
+            grandTotalVal.innerText = "RM " + grandTotalAmount.toFixed(2);
+        };
+    </script>
+</body>
+</html>
