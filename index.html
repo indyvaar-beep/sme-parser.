@@ -1,5 +1,5 @@
 
-   <!DOCTYPE html>
+  <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -63,7 +63,7 @@
     <div class="box">
         <h3>3. Support</h3>
         <p style="font-size:12px; color:#94a3b8; margin-bottom: 5px;">Need automated background workflows or bulk PDF processing?</p>
-        <!-- Standard redirect url layout to eliminate cross-origin scripting errors -->
+        <!-- The Bulletproof Click-to-Chat Short Code Gateway Link -->
         <a href="https://wa.me." target="_blank" rel="noopener noreferrer" class="wa-btn">
             Connect via WhatsApp
         </a>
@@ -99,7 +99,6 @@
             for (var i = 0; i < lines.length; i++) {
                 var line = lines[i].trim();
                 
-                // Native String Extraction to fix loading crash vulnerabilities
                 if (line.toLowerCase().indexOf('x') > -1 && line.indexOf('-') > -1) {
                     try {
                         var parts = line.split('-');
@@ -126,7 +125,7 @@
                                     '</tr>';
                         }
                     } catch (e) {
-                        // Skip unparseable lines quietly
+                        // Skip lines with syntax errors quietly
                     }
                 }
             }
@@ -148,4 +147,3 @@
     </script>
 </body>
 </html>
- 
