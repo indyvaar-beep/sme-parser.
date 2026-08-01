@@ -1,19 +1,21 @@
-<!DOCTYPE html>
+
+    <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SME Smart Parser - Stable 2026 Edition</title>
+    <title>SME Smart Parser - Contact Edition</title>
     <style>
         body { background-color: #0b131f; color: #ffffff; font-family: sans-serif; padding: 20px; text-align: center; }
         .box { background: #111926; border: 1px solid #1e293b; padding: 20px; border-radius: 8px; max-width: 600px; margin: 20px auto; text-align: left; }
         textarea { width: 100%; height: 120px; background: #090d16; color: #fff; border: 1px solid #334155; padding: 10px; margin-bottom: 10px; font-family: monospace; font-size: 12px; resize: none; outline: none; }
         button { background: #10b981; color: #000; border: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; margin-bottom: 10px; }
-        .wa-btn { display: block; background: #00cc66; color: #fff; text-decoration: none; padding: 12px; font-weight: bold; border-radius: 4px; margin-top: 15px; text-align: center; font-size: 14px; width: 100%; }
         table { width: 100%; font-size: 13px; margin-top: 15px; border-collapse: collapse; }
         th, td { border-bottom: 1px solid #334155; padding: 10px; text-align: left; }
         .total-box { margin-top: 15px; padding-top: 10px; border-top: 1px solid #334155; font-size: 13px; }
         .total-row { display: flex; justify-content: space-between; margin-bottom: 5px; color: #94a3b8; }
+        .contact-box { background: #072c24; border: 1px solid #10b981; padding: 15px; border-radius: 6px; text-align: center; margin-top: 15px; }
+        .phone-display { font-size: 24px; font-weight: bold; color: #10b981; font-family: monospace; display: block; margin: 10px 0; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -60,16 +62,15 @@
     </div>
 
     <div class="box">
-        <h3>3. Support</h3>
-        <p style="font-size:12px; color:#94a3b8; margin-bottom: 5px;">Need automated background workflows or bulk PDF processing?</p>
+        <h3>3. Support & Licensing</h3>
+        <p style="font-size:13px; color:#cbd5e1;">Need automated custom configurations for your business accounting system?</p>
         
-        <!-- BULLETPROOF DIRECT LINK WITH NO INTERMEDIATE JS SCRIPTS -->
-        <a href="https://wa.me." 
-           target="_blank" 
-           rel="noopener noreferrer" 
-           class="wa-btn">
-            Connect via WhatsApp
-        </a>
+        <!-- CLEAR VISUAL PLAIN TEXT CONTACT NUMBER INFO BOX -->
+        <div class="contact-box">
+            <p style="font-size: 12px; color: #a7f3d0;">💬 Contact the Developer Directly via WhatsApp:</p>
+            <span class="phone-display">011-8402 8285</span>
+            <p style="font-size: 11px; color: #6ee7b7;">Save this number to your phone contacts to chat.</p>
+        </div>
     </div>
 
     <footer>
@@ -125,7 +126,7 @@
                                          '</tr>';
                         }
                     } catch (err) {
-                        // Skip line errors
+                        // Skip errors
                     }
                 }
             }
