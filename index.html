@@ -68,8 +68,8 @@
         
         <div class="contact-box">
             <p style="font-size: 12px; color: #a7f3d0;">📞 Contact the Developer Directly:</p>
-            <!-- Native tel link updated with your correct number -->
-            <a href="tel:+60184028285" class="phone-link">018-402 8285</a>
+            <!-- Fixed and updated natively using your explicit 6018 number layout parameters -->
+            <a href="tel:+60184028285" class="phone-link">6018-402 8285</a>
             <p style="font-size: 11px; color: #6ee7b7;">Save this number to your phone contacts to connect instantly.</p>
         </div>
     </div>
@@ -107,8 +107,8 @@
                 if (currentLine.toLowerCase().indexOf('x') > -1 && currentLine.indexOf('-') > -1) {
                     try {
                         var elements = currentLine.split('-');
-                        var itemLeft = elements[0].trim();
-                        var itemRight = elements[1].trim();
+                        var itemLeft = elements.trim();
+                        var itemRight = elements.trim();
 
                         var separatorIndex = itemLeft.toLowerCase().indexOf('x');
                         var itemQty = parseInt(itemLeft.substring(0, separatorIndex).trim(), 10);
