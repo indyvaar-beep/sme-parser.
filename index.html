@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +10,7 @@
         .box { background: #111926; border: 1px solid #1e293b; padding: 20px; border-radius: 8px; max-width: 600px; margin: 20px auto; text-align: left; }
         textarea { width: 100%; height: 120px; background: #090d16; color: #fff; border: 1px solid #334155; padding: 10px; margin-bottom: 10px; font-family: monospace; }
         button { background: #10b981; color: #000; border: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; margin-bottom: 10px; }
-        .wa-btn { display: block; background: #00cc66; color: #fff; text-align: center; border: none; padding: 12px; font-weight: bold; border-radius: 4px; margin-top: 15px; width: 100%; cursor: pointer; font-size: 14px; }
+        .wa-btn { display: block; background: #00cc66; color: #fff; text-decoration: none; padding: 12px; font-weight: bold; border-radius: 4px; margin-top: 15px; text-align: center; font-size: 14px; }
         table { width: 100%; font-size: 13px; margin-top: 15px; border-collapse: collapse; }
         th, td { border-bottom: 1px solid #334155; padding: 10px; text-align: left; }
         .total-box { margin-top: 15px; padding-top: 10px; border-top: 1px solid #334155; font-size: 13px; }
@@ -62,8 +63,10 @@
     <div class="box">
         <h3>3. Support</h3>
         <p style="font-size:12px; color:#94a3b8; margin-bottom: 5px;">Need automated background workflows or bulk PDF processing?</p>
-        <!-- Native JavaScript Safe Form trigger button targeting your number -->
-        <button id="waSecureBtn" type="button" class="wa-btn">Connect via WhatsApp</button>
+        <!-- The Official Meta Click-to-Chat Format (Bypasses browser popup blockers completely) -->
+        <a href="https://wa.me." target="_blank" rel="noopener noreferrer" class="wa-btn">
+            Connect via WhatsApp
+        </a>
     </div>
 
     <footer>
@@ -79,16 +82,6 @@
 
         document.getElementById('loadBtn').onclick = function() {
             input.value = "Ahmad Enterprise\n2x Office Chair - RM700\n1x Desk - RM890\n3X Shelf - RM1900\n4X Computer - RM4000";
-        };
-
-        // Universal JavaScript window navigator handler to bypass anchor text redirect glitches
-        document.getElementById('waSecureBtn').onclick = function() {
-            var targetNum = "60184028285";
-            var textPayload = encodeURIComponent("Hi Indyvaar! I am interested in buying or integrating your SME Smart Parser.");
-            var fallbackGateway = "https://web.whatsapp.com/send?phone=" + targetNum + "&text=" + textPayload;
-            
-            // Open window stream instantly
-            window.open(fallbackGateway, '_blank');
         };
 
         document.getElementById('extractBtn').onclick = function() {
