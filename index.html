@@ -9,7 +9,7 @@
         .box { background: #111926; border: 1px solid #1e293b; padding: 20px; border-radius: 8px; max-width: 600px; margin: 20px auto; text-align: left; }
         textarea { width: 100%; height: 120px; background: #090d16; color: #fff; border: 1px solid #334155; padding: 10px; margin-bottom: 10px; font-family: monospace; font-size: 12px; resize: none; outline: none; }
         button { background: #10b981; color: #000; border: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; margin-bottom: 10px; }
-        .wa-btn { display: block; background: #00cc66; color: #fff; text-decoration: none; padding: 12px; font-weight: bold; border-radius: 4px; margin-top: 15px; text-align: center; font-size: 14px; cursor: pointer; border: none; width: 100%; }
+        .wa-btn { display: block; background: #00cc66; color: #fff; text-decoration: none; padding: 12px; font-weight: bold; border-radius: 4px; margin-top: 15px; text-align: center; font-size: 14px; width: 100%; }
         table { width: 100%; font-size: 13px; margin-top: 15px; border-collapse: collapse; }
         th, td { border-bottom: 1px solid #334155; padding: 10px; text-align: left; }
         .total-box { margin-top: 15px; padding-top: 10px; border-top: 1px solid #334155; font-size: 13px; }
@@ -62,8 +62,10 @@
     <div class="box">
         <h3>3. Support</h3>
         <p style="font-size:12px; color:#94a3b8; margin-bottom: 5px;">Need automated background workflows or bulk PDF processing?</p>
-        <!-- Interactive Desktop & Mobile routing link -->
-        <button id="whatsappBtn" type="button" class="wa-btn">Connect via WhatsApp</button>
+        <!-- Standard HTML anchor link targeting Meta API server directly to bypass pop-up restrictions -->
+        <a href="https://whatsapp.com." target="_blank" rel="noopener noreferrer" class="wa-btn">
+            Connect via WhatsApp
+        </a>
     </div>
 
     <footer>
@@ -79,25 +81,6 @@
 
         document.getElementById('loadSampleBtn').onclick = function() {
             rawInput.value = "Ahmad Enterprise\n2x Office Chair - RM700\n1x Desk - RM890\n3x Shelf - RM1900\n4x Computer - RM4000";
-        };
-
-        // Desktop vs Mobile adaptive click listener 
-        document.getElementById('whatsappBtn').onclick = function() {
-            var phoneNumber = "60184028285";
-            var messageText = encodeURIComponent("Hi Indyvaar! I am interested in your SME Smart Parser platform.");
-            
-            // Check if user is on mobile or desktop
-            var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            
-            var targetUrl = "";
-            if (isMobile) {
-                targetUrl = "https://wa.me" + phoneNumber + "?text=" + messageText;
-            } else {
-                // Force secure desktop routing web URL
-                targetUrl = "https://whatsapp.com" + phoneNumber + "&text=" + messageText;
-            }
-            
-            window.open(targetUrl, '_blank');
         };
 
         document.getElementById('extractBtn').onclick = function() {
@@ -138,7 +121,7 @@
                                          '</tr>';
                         }
                     } catch (err) {
-                        // Skip line errors
+                        // Skip errors
                     }
                 }
             }
