@@ -8,7 +8,7 @@
     <style>
         body { background-color: #0b131f; color: #ffffff; font-family: sans-serif; padding: 20px; text-align: center; }
         .box { background: #111926; border: 1px solid #1e293b; padding: 20px; border-radius: 8px; max-width: 600px; margin: 20px auto; text-align: left; }
-        textarea { width: 100%; height: 120px; background: #090d16; color: #fff; border: 1px solid #334155; padding: 10px; margin-bottom: 10px; font-family: monospace; }
+        textarea { width: 100%; height: 120px; background: #090d16; color: #fff; border: 1px solid #334155; padding: 10px; margin-bottom: 10px; font-family: monospace; font-size: 12px; resize: none; outline: none; }
         button { background: #10b981; color: #000; border: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; margin-bottom: 10px; }
         .wa-btn { display: block; background: #00cc66; color: #fff; text-decoration: none; padding: 12px; font-weight: bold; border-radius: 4px; margin-top: 15px; text-align: center; font-size: 14px; }
         table { width: 100%; font-size: 13px; margin-top: 15px; border-collapse: collapse; }
@@ -63,14 +63,14 @@
     <div class="box">
         <h3>3. Support</h3>
         <p style="font-size:12px; color:#94a3b8; margin-bottom: 5px;">Need automated background workflows or bulk PDF processing?</p>
-        <!-- Updated to use the direct web.whatsapp.com entry link layout to avoid mobile routing errors -->
-        <a href="https://whatsapp.com." target="_blank" rel="noopener noreferrer" class="wa-btn">
-            Connect via WhatsApp Web
+        <!-- Standard redirect url layout to eliminate cross-origin scripting errors -->
+        <a href="https://wa.me." target="_blank" rel="noopener noreferrer" class="wa-btn">
+            Connect via WhatsApp
         </a>
     </div>
 
     <footer>
-        <p style="font-size: 10px; color: #475569; margin-top: 20px;">🔒 <strong>PDPA Compliance Notice:</strong> Secure real-time computing engine. No corporate transcripts or transaction parameters are saved.</p>
+        <p style="font-size: 10px; color: #475569; margin-top: 20px;">🔒 <strong>PDPA Compliance Notice:</strong> Secure real-time computing engine. No corporate transcripts are saved.</p>
     </footer>
 
     <script>
@@ -81,12 +81,15 @@
         var grandTotalVal = document.getElementById('grandTotalVal');
 
         document.getElementById('loadBtn').onclick = function() {
-            input.value = "Ahmad Enterprise\n2x Office Chair - RM700\n1x Desk - RM890\n3X Shelf - RM1900\n4X Computer - RM4000";
+            input.value = "Ahmad Enterprise\n2x Office Chair - RM700\n1x Desk - RM890\n3x Shelf - RM1900\n4x Computer - RM4000";
         };
 
         document.getElementById('extractBtn').onclick = function() {
             var text = input.value.trim();
-            if (!text) return alert("Please type text or load a sample first!");
+            if (!text) {
+                alert("Please type text or load a sample first!");
+                return;
+            }
 
             var lines = text.split('\n');
             var html = '';
@@ -95,21 +98,36 @@
 
             for (var i = 0; i < lines.length; i++) {
                 var line = lines[i].trim();
-                var match = line.match(/^(\d+)\s*[xX]\s*(.+?)\s*-\s*[rR][mM]\s*(\d+)$/);
                 
-                if (match) {
-                    itemFound = true;
-                    var qty = parseInt(match[1]);
-                    var itemName = match[2];
-                    var totalPrice = parseFloat(match[3]);
-                    
-                    subtotal += totalPrice;
+                // Native String Extraction to fix loading crash vulnerabilities
+                if (line.toLowerCase().indexOf('x') > -1 && line.indexOf('-') > -1) {
+                    try {
+                        var parts = line.split('-');
+                        var leftPart = parts[0].trim();
+                        var rightPart = parts[1].trim();
 
-                    html += '<tr>' +
-                                '<td style="color: #f1f5f9; font-weight: 500;">' + itemName + '</td>' +
-                                '<td style="text-align: center; color: #94a3b8; font-family: monospace;">' + qty + '</td>' +
-                                '<td style="text-align: right; color: #f1f5f9; font-family: monospace; font-weight: 600;">' + totalPrice.toFixed(2) + '</td>' +
-                            '</tr>';
+                        var xIndex = leftPart.toLowerCase().indexOf('x');
+                        var qtyStr = leftPart.substring(0, xIndex).trim();
+                        var nameStr = leftPart.substring(xIndex + 1).trim();
+
+                        var cleanPriceStr = rightPart.toLowerCase().replace('rm', '').trim();
+
+                        var qty = parseInt(qtyStr, 10);
+                        var price = parseFloat(cleanPriceStr);
+
+                        if (!isNaN(qty) && !isNaN(price)) {
+                            itemFound = true;
+                            subtotal += price;
+
+                            html += '<tr>' +
+                                        '<td style="color: #f1f5f9; font-weight: 500;">' + nameStr + '</td>' +
+                                        '<td style="text-align: center; color: #94a3b8; font-family: monospace;">' + qty + '</td>' +
+                                        '<td style="text-align: right; color: #f1f5f9; font-family: monospace; font-weight: 600;">' + price.toFixed(2) + '</td>' +
+                                    '</tr>';
+                        }
+                    } catch (e) {
+                        // Skip unparseable lines quietly
+                    }
                 }
             }
 
