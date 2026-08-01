@@ -1,5 +1,4 @@
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -10,7 +9,7 @@
         .box { background: #111926; border: 1px solid #1e293b; padding: 20px; border-radius: 8px; max-width: 600px; margin: 20px auto; text-align: left; }
         textarea { width: 100%; height: 120px; background: #090d16; color: #fff; border: 1px solid #334155; padding: 10px; margin-bottom: 10px; font-family: monospace; font-size: 12px; resize: none; outline: none; }
         button { background: #10b981; color: #000; border: none; padding: 10px 20px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; margin-bottom: 10px; }
-        .wa-btn { display: block; background: #00cc66; color: #fff; text-decoration: none; padding: 12px; font-weight: bold; border-radius: 4px; margin-top: 15px; text-align: center; font-size: 14px; }
+        .wa-btn { display: block; background: #00cc66; color: #fff; text-decoration: none; padding: 12px; font-weight: bold; border-radius: 4px; margin-top: 15px; text-align: center; font-size: 14px; cursor: pointer; border: none; width: 100%; }
         table { width: 100%; font-size: 13px; margin-top: 15px; border-collapse: collapse; }
         th, td { border-bottom: 1px solid #334155; padding: 10px; text-align: left; }
         .total-box { margin-top: 15px; padding-top: 10px; border-top: 1px solid #334155; font-size: 13px; }
@@ -25,7 +24,7 @@
     <div class="box">
         <h3>1. Input Data</h3>
         <textarea id="rawInput" placeholder="Type items manually using the format: 2x Chair - RM700"></textarea>
-        <button id="loadBtn" type="button">💡 Load Sample</button>
+        <button id="loadSampleBtn" type="button">💡 Load Sample</button>
         <button id="extractBtn" type="button" style="background: #0ea5e9;">⚡ AI Extract</button>
     </div>
 
@@ -63,10 +62,8 @@
     <div class="box">
         <h3>3. Support</h3>
         <p style="font-size:12px; color:#94a3b8; margin-bottom: 5px;">Need automated background workflows or bulk PDF processing?</p>
-        <!-- The Bulletproof Click-to-Chat Short Code Gateway Link -->
-        <a href="https://wa.me." target="_blank" rel="noopener noreferrer" class="wa-btn">
-            Connect via WhatsApp
-        </a>
+        <!-- Interactive Desktop & Mobile routing link -->
+        <button id="whatsappBtn" type="button" class="wa-btn">Connect via WhatsApp</button>
     </div>
 
     <footer>
@@ -74,58 +71,74 @@
     </footer>
 
     <script>
-        var input = document.getElementById('rawInput');
-        var tbody = document.getElementById('tableBody');
+        var rawInput = document.getElementById('rawInput');
+        var tableBody = document.getElementById('tableBody');
         var subtotalVal = document.getElementById('subtotalVal');
         var sstVal = document.getElementById('sstVal');
         var grandTotalVal = document.getElementById('grandTotalVal');
 
-        document.getElementById('loadBtn').onclick = function() {
-            input.value = "Ahmad Enterprise\n2x Office Chair - RM700\n1x Desk - RM890\n3x Shelf - RM1900\n4x Computer - RM4000";
+        document.getElementById('loadSampleBtn').onclick = function() {
+            rawInput.value = "Ahmad Enterprise\n2x Office Chair - RM700\n1x Desk - RM890\n3x Shelf - RM1900\n4x Computer - RM4000";
+        };
+
+        // Desktop vs Mobile adaptive click listener 
+        document.getElementById('whatsappBtn').onclick = function() {
+            var phoneNumber = "60184028285";
+            var messageText = encodeURIComponent("Hi Indyvaar! I am interested in your SME Smart Parser platform.");
+            
+            // Check if user is on mobile or desktop
+            var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            var targetUrl = "";
+            if (isMobile) {
+                targetUrl = "https://wa.me" + phoneNumber + "?text=" + messageText;
+            } else {
+                // Force secure desktop routing web URL
+                targetUrl = "https://whatsapp.com" + phoneNumber + "&text=" + messageText;
+            }
+            
+            window.open(targetUrl, '_blank');
         };
 
         document.getElementById('extractBtn').onclick = function() {
-            var text = input.value.trim();
+            var text = rawInput.value.trim();
             if (!text) {
                 alert("Please type text or load a sample first!");
                 return;
             }
 
             var lines = text.split('\n');
-            var html = '';
-            var subtotal = 0;
+            var htmlOutput = '';
+            var runningSubtotal = 0;
             var itemFound = false;
 
             for (var i = 0; i < lines.length; i++) {
-                var line = lines[i].trim();
+                var currentLine = lines[i].trim();
                 
-                if (line.toLowerCase().indexOf('x') > -1 && line.indexOf('-') > -1) {
+                if (currentLine.toLowerCase().indexOf('x') > -1 && currentLine.indexOf('-') > -1) {
                     try {
-                        var parts = line.split('-');
-                        var leftPart = parts[0].trim();
-                        var rightPart = parts[1].trim();
+                        var elements = currentLine.split('-');
+                        var itemLeft = elements[0].trim();
+                        var itemRight = elements[1].trim();
 
-                        var xIndex = leftPart.toLowerCase().indexOf('x');
-                        var qtyStr = leftPart.substring(0, xIndex).trim();
-                        var nameStr = leftPart.substring(xIndex + 1).trim();
+                        var separatorIndex = itemLeft.toLowerCase().indexOf('x');
+                        var itemQty = parseInt(itemLeft.substring(0, separatorIndex).trim(), 10);
+                        var itemName = itemLeft.substring(separatorIndex + 1).trim();
 
-                        var cleanPriceStr = rightPart.toLowerCase().replace('rm', '').trim();
+                        var itemPrice = parseFloat(itemRight.toLowerCase().replace('rm', '').trim());
 
-                        var qty = parseInt(qtyStr, 10);
-                        var price = parseFloat(cleanPriceStr);
-
-                        if (!isNaN(qty) && !isNaN(price)) {
+                        if (!isNaN(itemQty) && !isNaN(itemPrice)) {
                             itemFound = true;
-                            subtotal += price;
+                            runningSubtotal += itemPrice;
 
-                            html += '<tr>' +
-                                        '<td style="color: #f1f5f9; font-weight: 500;">' + nameStr + '</td>' +
-                                        '<td style="text-align: center; color: #94a3b8; font-family: monospace;">' + qty + '</td>' +
-                                        '<td style="text-align: right; color: #f1f5f9; font-family: monospace; font-weight: 600;">' + price.toFixed(2) + '</td>' +
-                                    '</tr>';
+                            htmlOutput += '<tr>' +
+                                            '<td style="color: #f1f5f9; font-weight: 500;">' + itemName + '</td>' +
+                                            '<td style="text-align: center; color: #94a3b8; font-family: monospace;">' + itemQty + '</td>' +
+                                            '<td style="text-align: right; color: #f1f5f9; font-family: monospace; font-weight: 600;">' + itemPrice.toFixed(2) + '</td>' +
+                                         '</tr>';
                         }
-                    } catch (e) {
-                        // Skip lines with syntax errors quietly
+                    } catch (err) {
+                        // Skip line errors
                     }
                 }
             }
@@ -135,14 +148,14 @@
                 return;
             }
 
-            tbody.innerHTML = html;
+            tableBody.innerHTML = htmlOutput;
 
-            var sst = subtotal * 0.06;
-            var grand = subtotal + sst;
+            var sstAmount = runningSubtotal * 0.06;
+            var grandTotalAmount = runningSubtotal + sstAmount;
 
-            subtotalVal.innerText = "RM " + subtotal.toFixed(2);
-            sstVal.innerText = "RM " + sst.toFixed(2);
-            grandTotalVal.innerText = "RM " + grand.toFixed(2);
+            subtotalVal.innerText = "RM " + runningSubtotal.toFixed(2);
+            sstVal.innerText = "RM " + sstAmount.toFixed(2);
+            grandTotalVal.innerText = "RM " + grandTotalAmount.toFixed(2);
         };
     </script>
 </body>
