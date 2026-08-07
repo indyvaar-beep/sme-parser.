@@ -78,7 +78,10 @@
 
     <!-- Official Corporate Trust Footer Component -->
     <footer>
-        <span class="corp-title">SME Smart Parser Digital (Registration Pending / OKU S1O1P)</span>
+        <span class="corp-title">SME Smart Parser Digital    <p style="color: #888888; font-size: 12px; margin-top: 5px;">
+                Verified OKU Developer (S101P) | Fully Supported via Maybank Secure Transfer
+            </p>
+ </span>
         <p>🔒 <strong>PDPA Compliance Notice:</strong> Secure real-time computing engine compliant with the Malaysian Personal Data Protection Act. No corporate transcripts or transaction parameters are saved on our servers.</p>
         <p style="margin-top: 6px; font-size: 10px; color: #475569;">&copy; 2026 SME Smart Parser Digital. All Rights Reserved.</p>
     </footer>
@@ -91,10 +94,10 @@
         var grandTotalVal = document.getElementById('grandTotalVal');
 
         document.getElementById('loadSampleBtn').onclick = function() {
-            rawInput.value = "Ahmad Enterprise\n2x Office Chair - RM700\n1x Desk - RM890\n3x Shelf - RM1900\n4x Computer - RM4000";
-        };
+    rawInput.value = "Ahmad Enterprise\n2x Office Chair - RM700\n1x Desk - RM890\n3x Shelf - RM1900\n4x Computer - RM4000";
+};
 
-        document.getElementById('extractBtn').onclick = function() {
+document.getElementById('extractBtn').onclick = function() {
     if (!isPremiumUnlocked) {
         alert("⚠️ Please unlock Premium Access via Maybank / DuitNow QR first to use AI Parsing.");
         return;
@@ -105,6 +108,8 @@
         alert("Please type text or load a sample first!");
         return;
     }
+    
+    
 
 
             var lines = text.split('\n');
