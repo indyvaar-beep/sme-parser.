@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -41,7 +40,7 @@
         
         <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
             <div>
-                <button id="loadSampleBtn" style="background-color: #233d35; color: #ffffff;">💡 Load Sample</button>
+                <button id="loadSampleBtn">💡 Load Sample</button>
                 <button id="extractBtn">⚡ AI Extract</button>
             </div>
             <div style="background-color: #121f1b; padding: 8px 15px; border-radius: 6px; border: 1px solid #233d35;">
@@ -122,3 +121,127 @@
     <div class="box" style="font-size: 12px; color: #64748b; line-height: 1.6;">
         <h3 style="margin-top: 0; color: #64748b; font-size: 14px;">3. Licensing & Network Security</h3>
         <p style="margin: 4px 0;">Need specific internal file configurations for your business? Reach the developer support desk at <strong>6018-402 8285</strong>.</p>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SME Smart Parser - Malaysia LHDN Edition</title>
+    <style>
+        body { background-color: #060b09; color: #ffffff; font-family: sans-serif; padding: 20px; line-height: 1.5; }
+        .box { background-color: #0d1614; padding: 20px; border-radius: 8px; border: 1px solid #1f362e; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        button { background-color: #00e676; color: #000; border: none; padding: 12px 24px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-right: 10px; font-size: 14px; transition: background-color 0.2s; }
+        button:hover { background-color: #00c864; }
+        textarea { width: 100%; height: 140px; background-color: #121f1b; color: #fff; border: 1px solid #233d35; padding: 12px; border-radius: 4px; box-sizing: border-box; font-family: monospace; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #233d35; padding: 12px; text-align: left; font-size: 14px; }
+        th { background-color: #121f1b; color: #00e676; }
+        .badge { background-color: #233d35; color: #00e676; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. HEADER & STATUS SECTION -->
+    <div class="box">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <h1 style="color: #00e676; margin: 0; font-size: 26px; letter-spacing: 0.5px;">SME Smart Parser</h1>
+                <p style="color: #888888; font-size: 13px; margin: 3px 0 0 0;">Malaysia LHDN Compliance Assistant</p>
+            </div>
+            <div style="text-align: right;">
+                <span class="badge">♿ Verified OKU Developer (S101P)</span>
+                <p style="color: #00e676; font-size: 12px; margin: 5px 0 0 0; font-weight: bold;" id="account-tier-badge">Tier: Free Account</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. WORKSPACE PANEL (INPUT & INTERACTIVE CONTROL) -->
+    <div class="box">
+        <h3 style="margin-top: 0; color: #00e676;">1. Input Workspace</h3>
+        <p style="color: #a3a3a3; font-size: 13px; margin-top: -10px; margin-bottom: 12px;">Paste text directly from your supplier invoice or receipts below.</p>
+        <textarea id="rawInput" placeholder="Example format:\n2x Office Chair - RM700\n1x Desk - RM890"></textarea>
+        
+        <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div>
+                <button id="loadSampleBtn">💡 Load Sample</button>
+                <button id="extractBtn">⚡ AI Extract</button>
+            </div>
+            <div style="background-color: #121f1b; padding: 8px 15px; border-radius: 6px; border: 1px solid #233d35;">
+                <span id="usage-counter-text" style="color: #ff9100; font-size: 14px; font-weight: bold;">
+                    Parsing Credits Remaining: 3 Free Tries
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. OUTPUT CONSOLE & STABLE CALCULATION GRID -->
+    <div class="box">
+        <h3 style="margin-top: 0; color: #00e676;">2. Extracted Compliant Results</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ITEM DESCRIPTION</th>
+                    <th>QTY</th>
+                    <th>UNIT PRICE (RM)</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="3" style="text-align:center; color:#64748b; font-style: italic;">No active data processed. Paste input text above.</td></tr>
+            </tbody>
+        </table>
+        
+        <div style="margin-top: 20px; text-align: right; font-family: monospace; font-size: 15px; border-top: 1px solid #233d35; padding-top: 15px;">
+            <p style="margin: 5px 0;">Subtotal: <span id="subtotalVal" style="font-weight: bold;">RM 0.00</span></p>
+            <p style="color: #ff3d00; margin: 5px 0;">SST Component (6%): <span id="sstVal" style="font-weight: bold;">RM 0.00</span></p>
+            <p style="color: #00e676; font-size: 18px; font-weight: bold; margin: 5px 0; background-color: #121f1b; display: inline-block; padding: 6px 12px; border-radius: 4px;">Grand Total: <span id="grandTotalVal">RM 0.00</span></p>
+        </div>
+    </div>
+
+    <!-- 4. AUTOMATED VALUE-GATE & GATEWAY (MAYBANK DIRECT CHANNELS) -->
+    <div id="premium-monetization-section" style="margin: 30px auto; padding: 25px; border: 2px dashed #ffcc00; text-align: center; background-color: #0d1614; border-radius: 10px; max-width: 600px;">
+        <h3 style="color: #ffcc00; margin-top: 0; font-size: 20px; font-weight: bold; letter-spacing: 0.5px;">💛 Need More Extraction Credits?</h3>
+        <p style="color: #ffffff; font-size: 14px; margin-bottom: 25px; opacity: 0.95; max-width: 500px; margin-left: auto; margin-right: auto;">
+            Your free credits are spent or limited. Purchase an expansion packet instantly to add **+50 high-speed premium calculations** to your profile dashboard.
+        </p>
+
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; background-color: #121f1b; padding: 20px; border-radius: 8px; border: 1px solid #233d35; max-width: 420px; margin: 0 auto 25px auto;">
+            <div style="text-align: center;">
+                <span style="color: #ffcc00; font-size: 12px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 12px; letter-spacing: 1px;">Option 1: Scan via MAE App / DuitNow</span>
+                <img src="maybank-qr.png" alt="Maybank DuitNow QR" style="width: 160px; height: 160px; border: 5px solid #ffffff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+            </div>
+            <div style="color: #64748b; font-size: 13px; font-weight: bold;">— OR DIRECT TRANSFER —</div>
+            <div style="text-align: center; width: 100%;">
+                <span style="color: #ffcc00; font-size: 12px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 8px; letter-spacing: 1px;">Option 2: Direct Banking Details</span>
+                <div style="background-color: #0d1614; padding: 12px; border-radius: 6px; border: 1px solid #1f362e; text-align: left; font-size: 13px; color: #ffffff; font-family: monospace; line-height: 1.6;">
+                    <p style="margin: 2px 0;"><strong>Bank:</strong> Maybank (Malayan Banking Berhad)</p>
+                    <p style="margin: 2px 0;"><strong>Account Holder:</strong> Indyvaar Mani</p>
+                    <p style="margin: 2px 0;"><strong>Account Number:</strong> 564249441233</p>
+                    <p style="margin: 2px 0;"><strong>Fixed Pricing:</strong> RM 15.00 / 50 Credits</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sandbox Verification Frame -->
+        <div style="margin: 20px auto; padding: 15px; background-color: rgba(0, 230, 118, 0.08); border: 1px solid #00e676; border-radius: 6px; max-width: 420px;">
+            <span style="color: #00e676; font-size: 12px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 8px; letter-spacing: 0.5px;">💡 Sandbox Mode Activation Key</span>
+            <p style="color: #cccccc; font-size: 12px; margin: 0 0 10px 0;">Copy this test key to evaluate the automated top-up sequence:</p>
+            <div style="font-family: monospace; font-size: 13px; color: #ffffff; background-color: #0d1614; padding: 8px; border-radius: 4px; border: 1px solid #1f362e; font-weight: bold; letter-spacing: 1px; user-select: all; cursor: pointer;">M2U-TOPUP-50X</div>
+        </div>
+
+        <div style="margin-top: 20px; max-width: 420px; margin-left: auto; margin-right: auto;">
+            <label for="activation-key-input" style="color: #ffffff; display: block; font-size: 13px; margin-bottom: 10px; font-weight: bold;">🔑 Enter Your Top-Up Activation Code:</label>
+            <div style="display: flex; gap: 8px; justify-content: center;">
+                <input type="text" id="activation-key-input" placeholder="e.g. M2U-TOPUP-50X" style="flex: 1; padding: 12px; border-radius: 4px; border: 1px solid #233d35; background-color: #121f1b; color: #ffffff; font-family: monospace; font-size: 14px; text-align: center; text-transform: uppercase;">
+                <button onclick="verifyActivationCode()" type="button" style="background-color: #ffcc00; color: #000; padding: 0 20px;">Activate</button>
+            </div>
+            <div id="activation-status-msg" style="font-size: 13px; margin-top: 10px; font-weight: bold; min-height: 20px;"></div>
+        </div>
+
+        <p style="color: #94a3b8; font-size: 12px; margin-top: 20px; border-top: 1px solid #233d35; padding-top: 15px;">📩 After making your payment, send a screenshot of the receipt via WhatsApp to <a href="https://wa.me" target="_blank" style="color: #00e676; font-weight: bold; text-decoration: none;">+60 18-402 8285</a>. Your unique credit code will be issued instantly.</p>
+    </div>
+
+    <!-- 5. COMPLIANCE & LEGAL SAFETY FOOTER -->
+    <div class="box" style="font-size: 12px; color: #64748b; line-height: 1.6;">
+        <h3 style="margin-top: 0; color: #64748b; font-size: 14px;">3. Licensing & Network Security</h3>
+        <p style="margin: 4px 0;">Need specific internal file configurations for your business? Reach the developer support desk at <strong>6018-402 8285</strong>.</p>
+var rawInput = document.getElementById('rawInput');var tableBody = document.getElementById('tableBody');var subtotalVal = document.getElementById('subtotalVal');var sstVal = document.getElementById('sstVal');var grandTotalVal = document.getElementById('grandTotalVal');var counterText = document.getElementById('usage-counter-text');var tierBadge = document.getElementById('account-tier-badge');const COMPLIANT_TOKENS = ["M2U-TOPUP-50X", "M2U-SME-991A", "M2U-LHDN-224B", "M2U-PARSER-773C", "M2U-KUALA-884D"];let totalCreditsAvailable = 0;let isPremiumUnlocked = false;function initCreditEngine() {let savedPremium = localStorage.getItem('sme_premium_status');let savedCredits = localStorage.getItem('sme_credit_balance');if (savedPremium === 'true') {isPremiumUnlocked = true;tierBadge.innerText = "Tier: Premium Unlocked";tierBadge.style.color = "#00e676";counterText.innerText = "Parsing Credits Remaining: Unlimited Premium Access";counterText.style.color = "#00e676";document.getElementById("premium-monetization-section").style.borderColor = "#00e676";} else {if (savedCredits === null) {localStorage.setItem('sme_credit_balance', '3');totalCreditsAvailable = 3;} else {totalCreditsAvailable = parseInt(savedCredits, 10);}updateCounterUI(false);}}function updateCounterUI(isPremiumUpdate) {if (isPremiumUpdate || isPremiumUnlocked) {counterText.innerText = "Parsing Credits Remaining: Unlimited Premium Access";counterText.style.color = "#00e676";tierBadge.innerText = "Tier: Premium Unlocked";tierBadge.style.color = "#00e676";} else {counterText.innerText = "Parsing Credits Remaining: " + totalCreditsAvailable + " Extractions Left";if (totalCreditsAvailable <= 0) {counterText.style.color = "#ff3d00";tierBadge.innerText = "Tier: Free Tier Maxed Out";tierBadge.style.color = "#ff3d00";} else {counterText.style.color = "#ff9100";tierBadge.innerText = "Tier: Free Account";tierBadge.style.color = "#a3a3a3";}}}window.verifyActivationCode = function() {const userInputField = document.getElementById('activation-key-input');const enteredKey = userInputField.value.trim().toUpperCase();const statusMessage = document.getElementById('activation-status-msg');if (isPremiumUnlocked) {statusMessage.style.color = "#00e676";statusMessage.innerText = "✅ Your profile is already configured with Premium Access!";return;}if (COMPLIANT_TOKENS.includes(enteredKey)) {isPremiumUnlocked = true;localStorage.setItem('sme_premium_status', 'true');localStorage.setItem('sme_credit_balance', '9999');statusMessage.style.color = "#00e676";statusMessage.innerText = "✅ Top-Up Successful! Premium Status Unlocked Perfectly.";document.getElementById("premium-monetization-section").style.borderColor = "#00e676";userInputField.disabled = true;updateCounterUI(true);} else {statusMessage.style.color = "#ff3d00";statusMessage.innerText = "❌ Invalid key. Please ensure payment transfer match or text support.";}};document.getElementById('loadSampleBtn').onclick = function() {rawInput.value = "Ahmad Enterprise\n2x Office Chair - RM700\n1x Desk - RM890\n3x Shelf - RM1900\n4x Computer - RM4000";};document.getElementById('extractBtn').onclick = function() {if (!isPremiumUnlocked) {if (totalCreditsAvailable <= 0) {alert("⚠️ Allocation Exhausted: You have used your 3 free database parsing sessions. Please execute a secure Maybank top-up below to process further datasets.");return;}totalCreditsAvailable -= 1;localStorage.setItem('sme_credit_balance', totalCreditsAvailable.toString());updateCounterUI(false);}var text = rawInput.value.trim();if (!text) {alert("Please paste transactional data or trigger a sample baseline array first!");return;}var lines = text.split('\n');var htmlOutput = '';var runningSubtotal = 0;var itemFound = false;for (var i = 0; i < lines.length; i++) {var currentLine = lines[i].trim();if (currentLine.toLowerCase().indexOf('x') > -1 && currentLine.indexOf('-') > -1) {try {var parts = currentLine.split('-');var itemLeft = parts[0].trim();var itemRight = parts[1].trim();var xIndex = itemLeft.toLowerCase().indexOf('x');var qty = parseInt(itemLeft.substring(0, xIndex).trim(), 10);var name = itemLeft.substring(xIndex + 1).trim();var price = parseFloat(itemRight.replace('RM', '').trim());if (!isNaN(qty) && !isNaN(price)) {var rowTotal = qty * price;htmlOutput += '' + name + '' + qty + 'RM ' + price.toFixed(2) + '';runningSubtotal += rowTotal;itemFound = true;}} catch(e) { console.log("Parsing line anomaly logged:", e); }}}if (itemFound) {tableBody.innerHTML = htmlOutput;var sstCalculated = runningSubtotal * 0.06;var finalGrand = runningSubtotal + sstCalculated;subtotalVal.innerText = 'RM ' + runningSubtotal.toFixed(2);sstVal.innerText = 'RM ' + sstCalculated.toFixed(2);grandTotalVal.innerText = 'RM ' + finalGrand.toFixed(2);} else {alert("Syntax Read Error: Ensure structural elements follow the standardized format string layout:\n\n[Qty]x [Item Description] - RM[Price]");}};initCreditEngine();
