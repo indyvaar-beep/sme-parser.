@@ -121,3 +121,181 @@
     <div class="box" style="font-size: 12px; color: #64748b; line-height: 1.6;">
         <h3 style="margin-top: 0; color: #64748b; font-size: 14px;">3. Licensing & Network Security</h3>
         <p style="margin: 4px 0;">Need specific internal file configurations for your business? Reach the developer support desk at <strong>6018-402 8285</strong>.</p>
+
+<script>
+(function () {
+    const rawInput = document.getElementById("rawInput");
+    const loadSampleBtn = document.getElementById("loadSampleBtn");
+    const extractBtn = document.getElementById("extractBtn");
+    const activateBtn = document.getElementById("activateBtn");
+    const activationInput = document.getElementById("activation-key-input");
+    const activationStatus = document.getElementById("activation-status-msg");
+    const tableBody = document.getElementById("tableBody");
+    const subtotalVal = document.getElementById("subtotalVal");
+    const sstVal = document.getElementById("sstVal");
+    const grandTotalVal = document.getElementById("grandTotalVal");
+    const usageText = document.getElementById("usage-counter-text");
+    const tierBadge = document.getElementById("account-tier-badge");
+
+    const FREE_START = 3;
+    const CREDIT_KEY = "smeParserCredits";
+    const TIER_KEY = "smeParserTier";
+
+    let credits = Number(localStorage.getItem(CREDIT_KEY));
+    if (!Number.isFinite(credits) || credits < 0) credits = FREE_START;
+
+    function updateCredits() {
+        usageText.textContent = "Parsing Credits Remaining: " + credits + (credits === 1 ? " Credit" : " Credits");
+        if (credits <= 0) {
+            usageText.style.color = "#ff3d00";
+        } else {
+            usageText.style.color = "#ff9100";
+        }
+        tierBadge.textContent = localStorage.getItem(TIER_KEY) === "premium"
+            ? "Tier: Premium Account"
+            : "Tier: Free Account";
+        localStorage.setItem(CREDIT_KEY, String(credits));
+    }
+
+    function money(value) {
+        return "RM " + value.toFixed(2);
+    }
+
+    function renderRows(items) {
+        if (!items.length) {
+            tableBody.innerHTML =
+                '<tr><td colspan="3" style="text-align:center;color:#ff9100;">No items found. Try: 2x Office Chair - RM700</td></tr>';
+            subtotalVal.textContent = money(0);
+            sstVal.textContent = money(0);
+            grandTotalVal.textContent = money(0);
+            return;
+        }
+
+        let subtotal = 0;
+        tableBody.innerHTML = "";
+
+        items.forEach(function (item) {
+            const lineTotal = item.qty * item.unitPrice;
+            subtotal += lineTotal;
+
+            const tr = document.createElement("tr");
+            tr.innerHTML =
+                "<td>" + escapeHtml(item.description) + "</td>" +
+                "<td>" + item.qty + "</td>" +
+                "<td>" + money(item.unitPrice) + "</td>";
+            tableBody.appendChild(tr);
+        });
+
+        const sst = subtotal * 0.06;
+        const grand = subtotal + sst;
+
+        subtotalVal.textContent = money(subtotal);
+        sstVal.textContent = money(sst);
+        grandTotalVal.textContent = money(grand);
+    }
+
+    function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, function (char) {
+            return {
+                "&": "&amp;", "<": "&lt;", ">": "&gt;",
+                '"': "&quot;", "'": "&#039;"
+            }[char];
+        });
+    }
+
+    function parseInput(text) {
+        const items = [];
+        const lines = text.split(/\r?\n/);
+
+        lines.forEach(function (line) {
+            line = line.trim();
+            if (!line) return;
+
+            // Examples supported:
+            // 2x Office Chair - RM700
+            // 1 x Desk RM890
+            // Office Chair - RM700
+            const match = line.match(
+                /^(?:(\d+(?:\.\d+)?)\s*[xX×]\s*)?(.+?)(?:\s*[-–—:]\s*|\s+)(?:RM|MYR)\s*([\d,]+(?:\.\d{1,2})?)\s*$/i
+            );
+
+            if (match) {
+                const qty = match[1] ? Number(match[1]) : 1;
+                const description = match[2].trim();
+                const unitPrice = Number(match[3].replace(/,/g, ""));
+                if (description && Number.isFinite(unitPrice)) {
+                    items.push({ description, qty, unitPrice });
+                }
+            }
+        });
+
+        return items;
+    }
+
+    loadSampleBtn.addEventListener("click", function () {
+        rawInput.value =
+            "2x Office Chair - RM700\n" +
+            "1x Desk - RM890\n" +
+            "3x Filing Cabinet - RM250";
+        activationStatus.textContent = "";
+        rawInput.focus();
+    });
+
+    extractBtn.addEventListener("click", function () {
+        if (credits <= 0) {
+            activationStatus.style.color = "#ff3d00";
+            activationStatus.textContent = "No parsing credits remaining. Activate a top-up code.";
+            return;
+        }
+
+        const text = rawInput.value.trim();
+        if (!text) {
+            activationStatus.style.color = "#ff9100";
+            activationStatus.textContent = "Please paste an invoice or receipt first.";
+            rawInput.focus();
+            return;
+        }
+
+        const items = parseInput(text);
+
+        if (!items.length) {
+            activationStatus.style.color = "#ff9100";
+            activationStatus.textContent = "No matching items found. Try the Load Sample button.";
+            return;
+        }
+
+        renderRows(items);
+        credits -= 1;
+        updateCredits();
+
+        activationStatus.style.color = "#00e676";
+        activationStatus.textContent = "Extraction completed successfully.";
+    });
+
+    activateBtn.addEventListener("click", function () {
+        const code = activationInput.value.trim().toUpperCase();
+
+        if (code === "M2U-TOPUP-50X") {
+            credits += 50;
+            localStorage.setItem(TIER_KEY, "premium");
+            updateCredits();
+
+            activationStatus.style.color = "#00e676";
+            activationStatus.textContent = "Activation successful: +50 credits added.";
+            activationInput.value = "";
+        } else if (!code) {
+            activationStatus.style.color = "#ff9100";
+            activationStatus.textContent = "Please enter an activation code.";
+        } else {
+            activationStatus.style.color = "#ff3d00";
+            activationStatus.textContent = "Invalid activation code.";
+        }
+    });
+
+    activationInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") activateBtn.click();
+    });
+
+    updateCredits();
+})();
+</script>
