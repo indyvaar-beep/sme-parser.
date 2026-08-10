@@ -272,17 +272,41 @@
         activationStatus.textContent = "Extraction completed successfully.";
     });
 
-    async function redeemActivationCode(code) {
-        const response = await fetch(
-            SUPABASE_URL + "/rest/v1/rpc/redeem_activation",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "apikey": SUPABASE_PUBLISHABLE_KEY,
-                    "Authorization": "Bearer " + SUPABASE_PUBLISHABLE_KEY
-                },
-                body: JSON.stringify({ p_code: code })
+   async function redeemActivationCode(code) {
+    // Give each browser a permanent customer ID
+    let customerId = localStorage.getItem("SME_CUSTOMER_ID");
+
+    if (!customerId) {
+        customerId = crypto.randomUUID();
+        localStorage.setItem("SME_CUSTOMER_ID", customerId);
+    }
+
+    const response = await fetch(
+        SUPABASE_URL + "/rest/v1/rpc/redeem_activation",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "apikey": SUPABASE_PUBLISHABLE_KEY,
+                "Authorization": "Bearer " + SUPABASE_PUBLISHABLE_KEY
+            },
+            body: JSON.stringify({
+                p_code: code,
+                p_customer_id: customerId
+            })
+        }
+    );
+
+    let data = null;
+
+    try {
+        data = await response.json();
+    } catch (error) {
+        console.error("Response JSON error:", error);
+    }
+
+    return data;
+}
             }
         );
 
@@ -321,7 +345,7 @@
             const result = await redeemActivationCode(code);
 
             if (result && result.success === true) {
-                const addedCredits = Number(result.credits) || 0;
+                const addedCredits = Number(result.credits_added) || 0;
 
                 credits += addedCredits;
                 localStorage.setItem(TIER_KEY, "premium");
