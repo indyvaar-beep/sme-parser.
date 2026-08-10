@@ -98,17 +98,10 @@
             </div>
         </div>
 
-        <!-- Sandbox Verification Frame -->
-        <div style="margin: 20px auto; padding: 15px; background-color: rgba(0, 230, 118, 0.08); border: 1px solid #00e676; border-radius: 6px; max-width: 420px;">
-            <span style="color: #00e676; font-size: 12px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 8px; letter-spacing: 0.5px;">💡 Sandbox Mode Activation Key</span>
-            <p style="color: #cccccc; font-size: 12px; margin: 0 0 10px 0;">Copy this test key to evaluate the automated top-up sequence:</p>
-            <div style="font-family: monospace; font-size: 13px; color: #ffffff; background-color: #0d1614; padding: 8px; border-radius: 4px; border: 1px solid #1f362e; font-weight: bold; letter-spacing: 1px; user-select: all; cursor: pointer;">M2U-TOPUP-50X</div>
-        </div>
-
         <div style="margin-top: 20px; max-width: 420px; margin-left: auto; margin-right: auto;">
             <label for="activation-key-input" style="color: #ffffff; display: block; font-size: 13px; margin-bottom: 10px; font-weight: bold;">🔑 Enter Your Top-Up Activation Code:</label>
             <div style="display: flex; gap: 8px; justify-content: center;">
-                <input type="text" id="activation-key-input" placeholder="e.g. M2U-TOPUP-50X" style="flex: 1; padding: 12px; border-radius: 4px; border: 1px solid #233d35; background-color: #121f1b; color: #ffffff; font-family: monospace; font-size: 14px; text-align: center; text-transform: uppercase;">
+                <input type="text" id="activation-key-input" placeholder="Enter your activation code" style="flex: 1; padding: 12px; border-radius: 4px; border: 1px solid #233d35; background-color: #121f1b; color: #ffffff; font-family: monospace; font-size: 14px; text-align: center; text-transform: uppercase;">
                 <button id="activateBtn" type="button" style="background-color: #ffcc00; color: #000; padding: 0 20px;">Activate</button>
             </div>
             <div id="activation-status-msg" style="font-size: 13px; margin-top: 10px; font-weight: bold; min-height: 20px;"></div>
@@ -141,19 +134,22 @@
     const CREDIT_KEY = "smeParserCredits";
     const TIER_KEY = "smeParserTier";
 
+    const SUPABASE_URL = "https://dkvgscvwzwtkxrcjwahr.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_oCeYKYhghDrQz3APJ0sbDw_TP86qyZe";
+
     let credits = Number(localStorage.getItem(CREDIT_KEY));
     if (!Number.isFinite(credits) || credits < 0) credits = FREE_START;
 
     function updateCredits() {
-        usageText.textContent = "Parsing Credits Remaining: " + credits + (credits === 1 ? " Credit" : " Credits");
-        if (credits <= 0) {
-            usageText.style.color = "#ff3d00";
-        } else {
-            usageText.style.color = "#ff9100";
-        }
-        tierBadge.textContent = localStorage.getItem(TIER_KEY) === "premium"
-            ? "Tier: Premium Account"
-            : "Tier: Free Account";
+        usageText.textContent =
+            "Parsing Credits Remaining: " +
+            credits +
+            (credits === 1 ? " Credit" : " Credits");
+        usageText.style.color = credits <= 0 ? "#ff3d00" : "#ff9100";
+        tierBadge.textContent =
+            localStorage.getItem(TIER_KEY) === "premium"
+                ? "Tier: Premium Account"
+                : "Tier: Free Account";
         localStorage.setItem(CREDIT_KEY, String(credits));
     }
 
@@ -161,10 +157,22 @@
         return "RM " + value.toFixed(2);
     }
 
+    function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, function (char) {
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            }[char];
+        });
+    }
+
     function renderRows(items) {
         if (!items.length) {
             tableBody.innerHTML =
-                '<tr><td colspan="3" style="text-align:center;color:#ff9100;">No items found. Try: 2x Office Chair - RM700</td></tr>';
+                '<tr><td colspan="3" style="text-align:center;color:#ff9100;">No items found. Try the Load Sample button.</td></tr>';
             subtotalVal.textContent = money(0);
             sstVal.textContent = money(0);
             grandTotalVal.textContent = money(0);
@@ -194,27 +202,13 @@
         grandTotalVal.textContent = money(grand);
     }
 
-    function escapeHtml(value) {
-        return String(value).replace(/[&<>"']/g, function (char) {
-            return {
-                "&": "&amp;", "<": "&lt;", ">": "&gt;",
-                '"': "&quot;", "'": "&#039;"
-            }[char];
-        });
-    }
-
     function parseInput(text) {
         const items = [];
-        const lines = text.split(/\r?\n/);
 
-        lines.forEach(function (line) {
+        text.split(/\r?\n/).forEach(function (line) {
             line = line.trim();
             if (!line) return;
 
-            // Examples supported:
-            // 2x Office Chair - RM700
-            // 1 x Desk RM890
-            // Office Chair - RM700
             const match = line.match(
                 /^(?:(\d+(?:\.\d+)?)\s*[xX×]\s*)?(.+?)(?:\s*[-–—:]\s*|\s+)(?:RM|MYR)\s*([\d,]+(?:\.\d{1,2})?)\s*$/i
             );
@@ -223,6 +217,7 @@
                 const qty = match[1] ? Number(match[1]) : 1;
                 const description = match[2].trim();
                 const unitPrice = Number(match[3].replace(/,/g, ""));
+
                 if (description && Number.isFinite(unitPrice)) {
                     items.push({ description, qty, unitPrice });
                 }
@@ -237,6 +232,7 @@
             "2x Office Chair - RM700\n" +
             "1x Desk - RM890\n" +
             "3x Filing Cabinet - RM250";
+
         activationStatus.textContent = "";
         rawInput.focus();
     });
@@ -244,14 +240,17 @@
     extractBtn.addEventListener("click", function () {
         if (credits <= 0) {
             activationStatus.style.color = "#ff3d00";
-            activationStatus.textContent = "No parsing credits remaining. Activate a top-up code.";
+            activationStatus.textContent =
+                "No parsing credits remaining. Activate a top-up code.";
             return;
         }
 
         const text = rawInput.value.trim();
+
         if (!text) {
             activationStatus.style.color = "#ff9100";
-            activationStatus.textContent = "Please paste an invoice or receipt first.";
+            activationStatus.textContent =
+                "Please paste an invoice or receipt first.";
             rawInput.focus();
             return;
         }
@@ -260,7 +259,8 @@
 
         if (!items.length) {
             activationStatus.style.color = "#ff9100";
-            activationStatus.textContent = "No matching items found. Try the Load Sample button.";
+            activationStatus.textContent =
+                "No matching items found. Try the Load Sample button.";
             return;
         }
 
@@ -272,23 +272,82 @@
         activationStatus.textContent = "Extraction completed successfully.";
     });
 
-    activateBtn.addEventListener("click", function () {
+    async function redeemActivationCode(code) {
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/rpc/redeem_activation",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_PUBLISHABLE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_PUBLISHABLE_KEY
+                },
+                body: JSON.stringify({ p_code: code })
+            }
+        );
+
+        let data = null;
+        try {
+            data = await response.json();
+        } catch (_) {}
+
+        if (!response.ok) {
+            throw new Error(
+                data && data.message
+                    ? data.message
+                    : "Could not contact the activation server."
+            );
+        }
+
+        return data;
+    }
+
+    activateBtn.addEventListener("click", async function () {
         const code = activationInput.value.trim().toUpperCase();
 
-        if (code === "M2U-TOPUP-50X") {
-            credits += 50;
-            localStorage.setItem(TIER_KEY, "premium");
-            updateCredits();
-
-            activationStatus.style.color = "#00e676";
-            activationStatus.textContent = "Activation successful: +50 credits added.";
-            activationInput.value = "";
-        } else if (!code) {
+        if (!code) {
             activationStatus.style.color = "#ff9100";
-            activationStatus.textContent = "Please enter an activation code.";
-        } else {
+            activationStatus.textContent =
+                "Please enter an activation code.";
+            return;
+        }
+
+        activateBtn.disabled = true;
+        activateBtn.textContent = "Checking...";
+        activationStatus.style.color = "#ffcc00";
+        activationStatus.textContent = "Checking activation code...";
+
+        try {
+            const result = await redeemActivationCode(code);
+
+            if (result && result.success === true) {
+                const addedCredits = Number(result.credits) || 0;
+
+                credits += addedCredits;
+                localStorage.setItem(TIER_KEY, "premium");
+                updateCredits();
+
+                activationStatus.style.color = "#00e676";
+                activationStatus.textContent =
+                    "Activation successful: +" +
+                    addedCredits +
+                    " credits added.";
+
+                activationInput.value = "";
+            } else {
+                activationStatus.style.color = "#ff3d00";
+                activationStatus.textContent =
+                    (result && result.message) ||
+                    "Invalid or already used activation code.";
+            }
+        } catch (error) {
+            console.error("Activation error:", error);
             activationStatus.style.color = "#ff3d00";
-            activationStatus.textContent = "Invalid activation code.";
+            activationStatus.textContent =
+                "Activation server error. Please try again.";
+        } finally {
+            activateBtn.disabled = false;
+            activateBtn.textContent = "Activate";
         }
     });
 
@@ -299,3 +358,6 @@
     updateCredits();
 })();
 </script>
+
+</body>
+</html>
