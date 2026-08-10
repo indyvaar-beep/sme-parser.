@@ -4,56 +4,257 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SME Smart Parser - Malaysia LHDN Edition</title>
+
     <style>
-        body { background-color: #060b09; color: #ffffff; font-family: sans-serif; padding: 20px; line-height: 1.5; }
-        .box { background-color: #0d1614; padding: 20px; border-radius: 8px; border: 1px solid #1f362e; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        button { background-color: #00e676; color: #000; border: none; padding: 12px 24px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-right: 10px; font-size: 14px; transition: background-color 0.2s; }
-        button:hover { background-color: #00c864; }
-        textarea { width: 100%; height: 140px; background-color: #121f1b; color: #fff; border: 1px solid #233d35; padding: 12px; border-radius: 4px; box-sizing: border-box; font-family: monospace; font-size: 14px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #233d35; padding: 12px; text-align: left; font-size: 14px; }
-        th { background-color: #121f1b; color: #00e676; }
-        .badge { background-color: #233d35; color: #00e676; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; margin-top: 5px; }
+        body {
+            background-color: #060b09;
+            color: #ffffff;
+            font-family: sans-serif;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .box {
+            background-color: #0d1614;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #1f362e;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        button {
+            background-color: #00e676;
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #00c864;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        textarea {
+            width: 100%;
+            height: 140px;
+            background-color: #121f1b;
+            color: #fff;
+            border: 1px solid #233d35;
+            padding: 12px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid #233d35;
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #121f1b;
+            color: #00e676;
+        }
+
+        .badge {
+            background-color: #233d35;
+            color: #00e676;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .payment-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background-color: #121f1b;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #233d35;
+            max-width: 420px;
+            margin: 0 auto 25px auto;
+        }
+
+        .payment-details {
+            background-color: #0d1614;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #1f362e;
+            text-align: left;
+            font-size: 13px;
+            color: #ffffff;
+            font-family: monospace;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 10px;
+            }
+
+            .box {
+                padding: 15px;
+            }
+
+            button {
+                margin-bottom: 8px;
+            }
+
+            #activation-key-input {
+                min-width: 0;
+            }
+        }
     </style>
 </head>
+
 <body>
 
-    <!-- 1. HEADER & STATUS SECTION -->
+    <!-- HEADER -->
     <div class="box">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-start;
+            flex-wrap:wrap;
+            gap:10px;
+        ">
             <div>
-                <h1 style="color: #00e676; margin: 0; font-size: 26px; letter-spacing: 0.5px;">SME Smart Parser</h1>
-                <p style="color: #888888; font-size: 13px; margin: 3px 0 0 0;">Malaysia LHDN Compliance Assistant</p>
+                <h1 style="
+                    color:#00e676;
+                    margin:0;
+                    font-size:26px;
+                    letter-spacing:0.5px;
+                ">
+                    SME Smart Parser
+                </h1>
+
+                <p style="
+                    color:#888888;
+                    font-size:13px;
+                    margin:3px 0 0 0;
+                ">
+                    Malaysia LHDN Compliance Assistant
+                </p>
             </div>
-            <div style="text-align: right;">
-                <span class="badge">♿ Verified OKU Developer (S101P)</span>
-                <p style="color: #00e676; font-size: 12px; margin: 5px 0 0 0; font-weight: bold;" id="account-tier-badge">Tier: Free Account</p>
+
+            <div style="text-align:right;">
+                <span class="badge">
+                    ♿ Verified OKU Developer (S101P)
+                </span>
+
+                <p
+                    id="account-tier-badge"
+                    style="
+                        color:#00e676;
+                        font-size:12px;
+                        margin:5px 0 0 0;
+                        font-weight:bold;
+                    "
+                >
+                    Tier: Free Account
+                </p>
             </div>
         </div>
     </div>
 
-    <!-- 2. WORKSPACE PANEL (INPUT & INTERACTIVE CONTROL) -->
+
+    <!-- INPUT WORKSPACE -->
     <div class="box">
-        <h3 style="margin-top: 0; color: #00e676;">1. Input Workspace</h3>
-        <p style="color: #a3a3a3; font-size: 13px; margin-top: -10px; margin-bottom: 12px;">Paste text directly from your supplier invoice or receipts below.</p>
-        <textarea id="rawInput" placeholder="Example format:\n2x Office Chair - RM700\n1x Desk - RM890"></textarea>
-        
-        <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+
+        <h3 style="margin-top:0;color:#00e676;">
+            1. Input Workspace
+        </h3>
+
+        <p style="
+            color:#a3a3a3;
+            font-size:13px;
+            margin-top:-10px;
+            margin-bottom:12px;
+        ">
+            Paste text directly from your supplier invoice or receipts below.
+        </p>
+
+        <textarea
+            id="rawInput"
+            placeholder="Example format:
+2x Office Chair - RM700
+1x Desk - RM890"
+        ></textarea>
+
+        <div style="
+            margin-top:12px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            flex-wrap:wrap;
+            gap:10px;
+        ">
+
             <div>
-                <button id="loadSampleBtn" type="button">💡 Load Sample</button>
-                <button id="extractBtn" type="button">⚡ AI Extract</button>
+                <button id="loadSampleBtn" type="button">
+                    💡 Load Sample
+                </button>
+
+                <button id="extractBtn" type="button">
+                    ⚡ AI Extract
+                </button>
             </div>
-            <div style="background-color: #121f1b; padding: 8px 15px; border-radius: 6px; border: 1px solid #233d35;">
-                <span id="usage-counter-text" style="color: #ff9100; font-size: 14px; font-weight: bold;">
+
+            <div style="
+                background-color:#121f1b;
+                padding:8px 15px;
+                border-radius:6px;
+                border:1px solid #233d35;
+            ">
+                <span
+                    id="usage-counter-text"
+                    style="
+                        color:#ff9100;
+                        font-size:14px;
+                        font-weight:bold;
+                    "
+                >
                     Parsing Credits Remaining: 3 Free Tries
                 </span>
             </div>
+
         </div>
     </div>
 
-    <!-- 3. OUTPUT CONSOLE & STABLE CALCULATION GRID -->
+
+    <!-- RESULTS -->
     <div class="box">
-        <h3 style="margin-top: 0; color: #00e676;">2. Extracted Compliant Results</h3>
+
+        <h3 style="margin-top:0;color:#00e676;">
+            2. Extracted Compliant Results
+        </h3>
+
         <table>
             <thead>
                 <tr>
@@ -62,260 +263,875 @@
                     <th>UNIT PRICE (RM)</th>
                 </tr>
             </thead>
+
             <tbody id="tableBody">
-                <tr><td colspan="3" style="text-align:center; color:#64748b; font-style: italic;">No active data processed. Paste input text above.</td></tr>
+                <tr>
+                    <td
+                        colspan="3"
+                        style="
+                            text-align:center;
+                            color:#64748b;
+                            font-style:italic;
+                        "
+                    >
+                        No active data processed. Paste input text above.
+                    </td>
+                </tr>
             </tbody>
         </table>
-        
-        <div style="margin-top: 20px; text-align: right; font-family: monospace; font-size: 15px; border-top: 1px solid #233d35; padding-top: 15px;">
-            <p style="margin: 5px 0;">Subtotal: <span id="subtotalVal" style="font-weight: bold;">RM 0.00</span></p>
-            <p style="color: #ff3d00; margin: 5px 0;">SST Component (6%): <span id="sstVal" style="font-weight: bold;">RM 0.00</span></p>
-            <p style="color: #00e676; font-size: 18px; font-weight: bold; margin: 5px 0; background-color: #121f1b; display: inline-block; padding: 6px 12px; border-radius: 4px;">Grand Total: <span id="grandTotalVal">RM 0.00</span></p>
+
+        <div style="
+            margin-top:20px;
+            text-align:right;
+            font-family:monospace;
+            font-size:15px;
+            border-top:1px solid #233d35;
+            padding-top:15px;
+        ">
+
+            <p style="margin:5px 0;">
+                Subtotal:
+                <span
+                    id="subtotalVal"
+                    style="font-weight:bold;"
+                >
+                    RM 0.00
+                </span>
+            </p>
+
+            <p style="
+                color:#ff3d00;
+                margin:5px 0;
+            ">
+                SST Component (6%):
+                <span
+                    id="sstVal"
+                    style="font-weight:bold;"
+                >
+                    RM 0.00
+                </span>
+            </p>
+
+            <p style="
+                color:#00e676;
+                font-size:18px;
+                font-weight:bold;
+                margin:5px 0;
+                background-color:#121f1b;
+                display:inline-block;
+                padding:6px 12px;
+                border-radius:4px;
+            ">
+                Grand Total:
+                <span id="grandTotalVal">
+                    RM 0.00
+                </span>
+            </p>
+
         </div>
     </div>
 
-    <!-- 4. AUTOMATED VALUE-GATE & GATEWAY (MAYBANK DIRECT CHANNELS) -->
-    <div id="premium-monetization-section" style="margin: 30px auto; padding: 25px; border: 2px dashed #ffcc00; text-align: center; background-color: #0d1614; border-radius: 10px; max-width: 600px;">
-        <h3 style="color: #ffcc00; margin-top: 0; font-size: 20px; font-weight: bold; letter-spacing: 0.5px;">💛 Need More Extraction Credits?</h3>
-        <p style="color: #ffffff; font-size: 14px; margin-bottom: 25px; opacity: 0.95; max-width: 500px; margin-left: auto; margin-right: auto;">
-            Your free credits are spent or limited. Purchase an expansion packet instantly to add **+50 high-speed premium calculations** to your profile dashboard.
+
+    <!-- TOP-UP SECTION -->
+    <div
+        id="premium-monetization-section"
+        style="
+            margin:30px auto;
+            padding:25px;
+            border:2px dashed #ffcc00;
+            text-align:center;
+            background-color:#0d1614;
+            border-radius:10px;
+            max-width:600px;
+        "
+    >
+
+        <h3 style="
+            color:#ffcc00;
+            margin-top:0;
+            font-size:20px;
+            font-weight:bold;
+        ">
+            💛 Need More Extraction Credits?
+        </h3>
+
+        <p style="
+            color:#ffffff;
+            font-size:14px;
+            margin-bottom:25px;
+            opacity:0.95;
+        ">
+            Purchase a 50-credit expansion packet and activate your unique code
+            after payment.
         </p>
 
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; background-color: #121f1b; padding: 20px; border-radius: 8px; border: 1px solid #233d35; max-width: 420px; margin: 0 auto 25px auto;">
-            <div style="text-align: center;">
-                <span style="color: #ffcc00; font-size: 12px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 12px; letter-spacing: 1px;">Option 1: Scan via MAE App / DuitNow</span>
-                <img src="maybank-qr.png" alt="Maybank DuitNow QR" style="width: 160px; height: 160px; border: 5px solid #ffffff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+
+        <div class="payment-box">
+
+            <div style="text-align:center;">
+
+                <span style="
+                    color:#ffcc00;
+                    font-size:12px;
+                    font-weight:bold;
+                    text-transform:uppercase;
+                    display:block;
+                    margin-bottom:12px;
+                    letter-spacing:1px;
+                ">
+                    Option 1: Scan via MAE App / DuitNow
+                </span>
+
+                <img
+                    src="maybank-qr.png"
+                    alt="Maybank DuitNow QR"
+                    style="
+                        width:160px;
+                        height:160px;
+                        border:5px solid #ffffff;
+                        border-radius:8px;
+                    "
+                >
+
             </div>
-            <div style="color: #64748b; font-size: 13px; font-weight: bold;">— OR DIRECT TRANSFER —</div>
-            <div style="text-align: center; width: 100%;">
-                <span style="color: #ffcc00; font-size: 12px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 8px; letter-spacing: 1px;">Option 2: Direct Banking Details</span>
-                <div style="background-color: #0d1614; padding: 12px; border-radius: 6px; border: 1px solid #1f362e; text-align: left; font-size: 13px; color: #ffffff; font-family: monospace; line-height: 1.6;">
-                    <p style="margin: 2px 0;"><strong>Bank:</strong> Maybank (Malayan Banking Berhad)</p>
-                    <p style="margin: 2px 0;"><strong>Account Holder:</strong> Indyvaar Mani</p>
-                    <p style="margin: 2px 0;"><strong>Account Number:</strong> 564249441233</p>
-                    <p style="margin: 2px 0;"><strong>Fixed Pricing:</strong> RM 15.00 / 50 Credits</p>
+
+
+            <div style="
+                color:#64748b;
+                font-size:13px;
+                font-weight:bold;
+            ">
+                — OR DIRECT TRANSFER —
+            </div>
+
+
+            <div style="
+                text-align:center;
+                width:100%;
+            ">
+
+                <span style="
+                    color:#ffcc00;
+                    font-size:12px;
+                    font-weight:bold;
+                    text-transform:uppercase;
+                    display:block;
+                    margin-bottom:8px;
+                    letter-spacing:1px;
+                ">
+                    Option 2: Direct Banking Details
+                </span>
+
+                <div class="payment-details">
+
+                    <!-- Replace these placeholders with your intended
+                         PUBLIC payment information -->
+
+                    <p style="margin:2px 0;">
+                        <strong>Bank:</strong>
+                        YOUR BANK
+                    </p>
+
+                    <p style="margin:2px 0;">
+                        <strong>Account Holder:</strong>
+                        YOUR NAME
+                    </p>
+
+                    <p style="margin:2px 0;">
+                        <strong>Account Number:</strong>
+                        YOUR ACCOUNT NUMBER
+                    </p>
+
+                    <p style="margin:2px 0;">
+                        <strong>Fixed Pricing:</strong>
+                        RM 15.00 / 50 Credits
+                    </p>
+
                 </div>
             </div>
+
         </div>
 
-        <div style="margin-top: 20px; max-width: 420px; margin-left: auto; margin-right: auto;">
-            <label for="activation-key-input" style="color: #ffffff; display: block; font-size: 13px; margin-bottom: 10px; font-weight: bold;">🔑 Enter Your Top-Up Activation Code:</label>
-            <div style="display: flex; gap: 8px; justify-content: center;">
-                <input type="text" id="activation-key-input" placeholder="Enter your activation code" style="flex: 1; padding: 12px; border-radius: 4px; border: 1px solid #233d35; background-color: #121f1b; color: #ffffff; font-family: monospace; font-size: 14px; text-align: center; text-transform: uppercase;">
-                <button id="activateBtn" type="button" style="background-color: #ffcc00; color: #000; padding: 0 20px;">Activate</button>
+
+        <!-- ACTIVATION -->
+        <div style="
+            margin-top:20px;
+            max-width:420px;
+            margin-left:auto;
+            margin-right:auto;
+        ">
+
+            <label
+                for="activation-key-input"
+                style="
+                    color:#ffffff;
+                    display:block;
+                    font-size:13px;
+                    margin-bottom:10px;
+                    font-weight:bold;
+                "
+            >
+                🔑 Enter Your Top-Up Activation Code:
+            </label>
+
+            <div style="
+                display:flex;
+                gap:8px;
+                justify-content:center;
+            ">
+
+                <input
+                    type="text"
+                    id="activation-key-input"
+                    placeholder="Enter your activation code"
+                    style="
+                        flex:1;
+                        padding:12px;
+                        border-radius:4px;
+                        border:1px solid #233d35;
+                        background-color:#121f1b;
+                        color:#ffffff;
+                        font-family:monospace;
+                        font-size:14px;
+                        text-align:center;
+                        text-transform:uppercase;
+                    "
+                >
+
+                <button
+                    id="activateBtn"
+                    type="button"
+                    style="
+                        background-color:#ffcc00;
+                        color:#000;
+                        padding:0 20px;
+                    "
+                >
+                    Activate
+                </button>
+
             </div>
-            <div id="activation-status-msg" style="font-size: 13px; margin-top: 10px; font-weight: bold; min-height: 20px;"></div>
+
+            <div
+                id="activation-status-msg"
+                style="
+                    font-size:13px;
+                    margin-top:10px;
+                    font-weight:bold;
+                    min-height:20px;
+                "
+            ></div>
+
         </div>
 
-        <p style="color: #94a3b8; font-size: 12px; margin-top: 20px; border-top: 1px solid #233d35; padding-top: 15px;">📩 After making your payment, send a screenshot of the receipt via WhatsApp to <a href="https://wa.me" target="_blank" style="color: #00e676; font-weight: bold; text-decoration: none;">+60 18-402 8285</a>. Your unique credit code will be issued instantly.</p>
+
+        <p style="
+            color:#94a3b8;
+            font-size:12px;
+            margin-top:20px;
+            border-top:1px solid #233d35;
+            padding-top:15px;
+        ">
+            After payment, provide your payment receipt through your chosen
+            support channel. Your unique activation code can then be entered
+            above.
+        </p>
+
     </div>
 
-    <!-- 5. COMPLIANCE & LEGAL SAFETY FOOTER -->
-    <div class="box" style="font-size: 12px; color: #64748b; line-height: 1.6;">
-        <h3 style="margin-top: 0; color: #64748b; font-size: 14px;">3. Licensing & Network Security</h3>
-        <p style="margin: 4px 0;">Need specific internal file configurations for your business? Reach the developer support desk at <strong>6018-402 8285</strong>.</p>
+
+    <!-- FOOTER -->
+    <div
+        class="box"
+        style="
+            font-size:12px;
+            color:#64748b;
+            line-height:1.6;
+        "
+    >
+
+        <h3 style="
+            margin-top:0;
+            color:#64748b;
+            font-size:14px;
+        ">
+            3. Licensing & Network Security
+        </h3>
+
+        <p style="margin:4px 0;">
+            Need specific internal file configurations for your business?
+            Contact the developer support desk.
+        </p>
+
+    </div>
+
 
 <script>
+
 (function () {
-    const rawInput = document.getElementById("rawInput");
-    const loadSampleBtn = document.getElementById("loadSampleBtn");
-    const extractBtn = document.getElementById("extractBtn");
-    const activateBtn = document.getElementById("activateBtn");
-    const activationInput = document.getElementById("activation-key-input");
-    const activationStatus = document.getElementById("activation-status-msg");
-    const tableBody = document.getElementById("tableBody");
-    const subtotalVal = document.getElementById("subtotalVal");
-    const sstVal = document.getElementById("sstVal");
-    const grandTotalVal = document.getElementById("grandTotalVal");
-    const usageText = document.getElementById("usage-counter-text");
-    const tierBadge = document.getElementById("account-tier-badge");
+
+    /* =========================================================
+       ELEMENT REFERENCES
+       ========================================================= */
+
+    const rawInput =
+        document.getElementById("rawInput");
+
+    const loadSampleBtn =
+        document.getElementById("loadSampleBtn");
+
+    const extractBtn =
+        document.getElementById("extractBtn");
+
+    const activateBtn =
+        document.getElementById("activateBtn");
+
+    const activationInput =
+        document.getElementById("activation-key-input");
+
+    const activationStatus =
+        document.getElementById("activation-status-msg");
+
+    const tableBody =
+        document.getElementById("tableBody");
+
+    const subtotalVal =
+        document.getElementById("subtotalVal");
+
+    const sstVal =
+        document.getElementById("sstVal");
+
+    const grandTotalVal =
+        document.getElementById("grandTotalVal");
+
+    const usageText =
+        document.getElementById("usage-counter-text");
+
+    const tierBadge =
+        document.getElementById("account-tier-badge");
+
+
+    /* =========================================================
+       SETTINGS
+       ========================================================= */
 
     const FREE_START = 3;
+
     const CREDIT_KEY = "smeParserCredits";
+
     const TIER_KEY = "smeParserTier";
 
-    const SUPABASE_URL = "https://dkvgscvwzwtkxrcjwahr.supabase.co";
-    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_oCeYKYhghDrQz3APJ0sbDw_TP86qyZe";
+    const CUSTOMER_KEY = "SME_CUSTOMER_ID";
 
-    let credits = Number(localStorage.getItem(CREDIT_KEY));
-    if (!Number.isFinite(credits) || credits < 0) credits = FREE_START;
+
+    /* =========================================================
+       SUPABASE
+       ========================================================= */
+
+    const SUPABASE_URL =
+        "https://dkvgscvwzwtkxrcjwahr.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_oCeYKYhghDrQz3APJ0sbDw_TP86qyZe";
+
+
+    /* =========================================================
+       LOCAL CREDIT STATE
+       ========================================================= */
+
+    let credits =
+        Number(localStorage.getItem(CREDIT_KEY));
+
+
+    if (
+        !Number.isFinite(credits) ||
+        credits < 0
+    ) {
+        credits = FREE_START;
+    }
+
+
+    /* =========================================================
+       UPDATE CREDIT DISPLAY
+       ========================================================= */
 
     function updateCredits() {
-        usageText.textContent =
-            "Parsing Credits Remaining: " +
-            credits +
-            (credits === 1 ? " Credit" : " Credits");
-        usageText.style.color = credits <= 0 ? "#ff3d00" : "#ff9100";
-        tierBadge.textContent =
-            localStorage.getItem(TIER_KEY) === "premium"
-                ? "Tier: Premium Account"
-                : "Tier: Free Account";
-        localStorage.setItem(CREDIT_KEY, String(credits));
+
+        if (credits <= 0) {
+
+            usageText.textContent =
+                "Parsing Credits Remaining: 0 Credits";
+
+            usageText.style.color =
+                "#ff3d00";
+
+        } else if (credits <= FREE_START) {
+
+            usageText.textContent =
+                "Parsing Credits Remaining: " +
+                credits +
+                (credits === 1
+                    ? " Free Try"
+                    : " Free Tries");
+
+            usageText.style.color =
+                "#ff9100";
+
+        } else {
+
+            usageText.textContent =
+                "Parsing Credits Remaining: " +
+                credits +
+                (credits === 1
+                    ? " Credit"
+                    : " Credits");
+
+            usageText.style.color =
+                "#00e676";
+        }
+
+
+        const tier =
+            localStorage.getItem(TIER_KEY);
+
+
+        if (tier === "premium") {
+
+            tierBadge.textContent =
+                "Tier: Premium Account";
+
+        } else {
+
+            tierBadge.textContent =
+                "Tier: Free Account";
+        }
+
+
+        localStorage.setItem(
+            CREDIT_KEY,
+            String(credits)
+        );
     }
+
+
+    /* =========================================================
+       MONEY FORMAT
+       ========================================================= */
 
     function money(value) {
-        return "RM " + value.toFixed(2);
+
+        return "RM " +
+            Number(value).toFixed(2);
     }
+
+
+    /* =========================================================
+       HTML SAFETY
+       ========================================================= */
 
     function escapeHtml(value) {
-        return String(value).replace(/[&<>"']/g, function (char) {
-            return {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#039;"
-            }[char];
-        });
+
+        return String(value).replace(
+            /[&<>"']/g,
+            function (char) {
+
+                return {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+                }[char];
+
+            }
+        );
     }
 
+
+    /* =========================================================
+       RENDER RESULTS
+       ========================================================= */
+
     function renderRows(items) {
+
         if (!items.length) {
+
             tableBody.innerHTML =
-                '<tr><td colspan="3" style="text-align:center;color:#ff9100;">No items found. Try the Load Sample button.</td></tr>';
-            subtotalVal.textContent = money(0);
-            sstVal.textContent = money(0);
-            grandTotalVal.textContent = money(0);
+                '<tr>' +
+                '<td colspan="3" style="text-align:center;color:#ff9100;">' +
+                'No items found.' +
+                '</td>' +
+                '</tr>';
+
+            subtotalVal.textContent =
+                money(0);
+
+            sstVal.textContent =
+                money(0);
+
+            grandTotalVal.textContent =
+                money(0);
+
             return;
         }
 
+
         let subtotal = 0;
+
         tableBody.innerHTML = "";
 
+
         items.forEach(function (item) {
-            const lineTotal = item.qty * item.unitPrice;
+
+            const lineTotal =
+                item.qty * item.unitPrice;
+
             subtotal += lineTotal;
 
-            const tr = document.createElement("tr");
+
+            const tr =
+                document.createElement("tr");
+
+
             tr.innerHTML =
-                "<td>" + escapeHtml(item.description) + "</td>" +
-                "<td>" + item.qty + "</td>" +
-                "<td>" + money(item.unitPrice) + "</td>";
+                "<td>" +
+                escapeHtml(item.description) +
+                "</td>" +
+
+                "<td>" +
+                item.qty +
+                "</td>" +
+
+                "<td>" +
+                money(item.unitPrice) +
+                "</td>";
+
+
             tableBody.appendChild(tr);
+
         });
 
-        const sst = subtotal * 0.06;
-        const grand = subtotal + sst;
 
-        subtotalVal.textContent = money(subtotal);
-        sstVal.textContent = money(sst);
-        grandTotalVal.textContent = money(grand);
+        const sst =
+            subtotal * 0.06;
+
+        const grand =
+            subtotal + sst;
+
+
+        subtotalVal.textContent =
+            money(subtotal);
+
+        sstVal.textContent =
+            money(sst);
+
+        grandTotalVal.textContent =
+            money(grand);
     }
 
+
+    /* =========================================================
+       INPUT PARSER
+       ========================================================= */
+
     function parseInput(text) {
+
         const items = [];
 
-        text.split(/\r?\n/).forEach(function (line) {
-            line = line.trim();
-            if (!line) return;
 
-            const match = line.match(
-                /^(?:(\d+(?:\.\d+)?)\s*[xX×]\s*)?(.+?)(?:\s*[-–—:]\s*|\s+)(?:RM|MYR)\s*([\d,]+(?:\.\d{1,2})?)\s*$/i
-            );
+        text
+            .split(/\r?\n/)
+            .forEach(function (line) {
 
-            if (match) {
-                const qty = match[1] ? Number(match[1]) : 1;
-                const description = match[2].trim();
-                const unitPrice = Number(match[3].replace(/,/g, ""));
+                line = line.trim();
 
-                if (description && Number.isFinite(unitPrice)) {
-                    items.push({ description, qty, unitPrice });
+
+                if (!line) {
+                    return;
                 }
-            }
-        });
+
+
+                /*
+                    Supports:
+
+                    2x Office Chair - RM700
+                    1x Desk - RM890
+                    3x Filing Cabinet - RM250
+                    Office Chair - RM700
+                    Office Chair RM700
+                    2 X Chair - MYR 1,200.50
+                */
+
+                const match =
+                    line.match(
+                        /^(?:(\d+(?:\.\d+)?)\s*[xX×]\s*)?(.+?)(?:\s*[-–—:]\s*|\s+)(?:RM|MYR)\s*([\d,]+(?:\.\d{1,2})?)\s*$/i
+                    );
+
+
+                if (!match) {
+                    return;
+                }
+
+
+                const qty =
+                    match[1]
+                        ? Number(match[1])
+                        : 1;
+
+
+                const description =
+                    match[2].trim();
+
+
+                const unitPrice =
+                    Number(
+                        match[3]
+                            .replace(/,/g, "")
+                    );
+
+
+                if (
+                    description &&
+                    Number.isFinite(qty) &&
+                    Number.isFinite(unitPrice) &&
+                    qty > 0 &&
+                    unitPrice >= 0
+                ) {
+
+                    items.push({
+                        description,
+                        qty,
+                        unitPrice
+                    });
+
+                }
+
+            });
+
 
         return items;
     }
 
-    loadSampleBtn.addEventListener("click", function () {
-        rawInput.value =
-            "2x Office Chair - RM700\n" +
-            "1x Desk - RM890\n" +
-            "3x Filing Cabinet - RM250";
 
-        activationStatus.textContent = "";
-        rawInput.focus();
-    });
+    /* =========================================================
+       LOAD SAMPLE
+       ========================================================= */
 
-    extractBtn.addEventListener("click", function () {
-        if (credits <= 0) {
-            activationStatus.style.color = "#ff3d00";
+    loadSampleBtn.addEventListener(
+        "click",
+        function () {
+
+            rawInput.value =
+                "2x Office Chair - RM700\n" +
+                "1x Desk - RM890\n" +
+                "3x Filing Cabinet - RM250";
+
+
             activationStatus.textContent =
-                "No parsing credits remaining. Activate a top-up code.";
-            return;
-        }
+                "";
 
-        const text = rawInput.value.trim();
 
-        if (!text) {
-            activationStatus.style.color = "#ff9100";
-            activationStatus.textContent =
-                "Please paste an invoice or receipt first.";
+            activationStatus.style.color =
+                "";
+
+
             rawInput.focus();
-            return;
-        }
-
-        const items = parseInput(text);
-
-        if (!items.length) {
-            activationStatus.style.color = "#ff9100";
-            activationStatus.textContent =
-                "No matching items found. Try the Load Sample button.";
-            return;
-        }
-
-        renderRows(items);
-        credits -= 1;
-        updateCredits();
-
-        activationStatus.style.color = "#00e676";
-        activationStatus.textContent = "Extraction completed successfully.";
-    });
-
-   async function redeemActivationCode(code) {
-    // Give each browser a permanent customer ID
-    let customerId = localStorage.getItem("SME_CUSTOMER_ID");
-
-    if (!customerId) {
-        customerId = crypto.randomUUID();
-        localStorage.setItem("SME_CUSTOMER_ID", customerId);
-    }
-
-    const response = await fetch(
-        SUPABASE_URL + "/rest/v1/rpc/redeem_activation",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "apikey": SUPABASE_PUBLISHABLE_KEY,
-                "Authorization": "Bearer " + SUPABASE_PUBLISHABLE_KEY
-            },
-            body: JSON.stringify({
-                p_code: code,
-                p_customer_id: customerId
-            })
         }
     );
 
-    let data = null;
 
-    try {
-        data = await response.json();
-    } catch (error) {
-        console.error("Response JSON error:", error);
+    /* =========================================================
+       EXTRACT / PARSE
+       ========================================================= */
+
+    extractBtn.addEventListener(
+        "click",
+        function () {
+
+            if (credits <= 0) {
+
+                activationStatus.style.color =
+                    "#ff3d00";
+
+                activationStatus.textContent =
+                    "No parsing credits remaining. " +
+                    "Activate a top-up code.";
+
+                return;
+            }
+
+
+            const text =
+                rawInput.value.trim();
+
+
+            if (!text) {
+
+                activationStatus.style.color =
+                    "#ff9100";
+
+                activationStatus.textContent =
+                    "Please paste an invoice or receipt first.";
+
+                rawInput.focus();
+
+                return;
+            }
+
+
+            const items =
+                parseInput(text);
+
+
+            if (!items.length) {
+
+                activationStatus.style.color =
+                    "#ff9100";
+
+                activationStatus.textContent =
+                    "No matching items found. " +
+                    "Try the Load Sample button.";
+
+                return;
+            }
+
+
+            renderRows(items);
+
+
+            /*
+                Only deduct one credit AFTER
+                successful parsing.
+            */
+
+            credits -= 1;
+
+            updateCredits();
+
+
+            activationStatus.style.color =
+                "#00e676";
+
+            activationStatus.textContent =
+                "Extraction completed successfully.";
+        }
+    );
+
+
+    /* =========================================================
+       CUSTOMER ID
+       ========================================================= */
+
+    function getCustomerId() {
+
+        let customerId =
+            localStorage.getItem(CUSTOMER_KEY);
+
+
+        if (!customerId) {
+
+            if (
+                window.crypto &&
+                typeof window.crypto.randomUUID === "function"
+            ) {
+
+                customerId =
+                    window.crypto.randomUUID();
+
+            } else {
+
+                customerId =
+                    "customer-" +
+                    Date.now() +
+                    "-" +
+                    Math.random()
+                        .toString(36)
+                        .substring(2, 12);
+            }
+
+
+            localStorage.setItem(
+                CUSTOMER_KEY,
+                customerId
+            );
+        }
+
+
+        return customerId;
     }
 
-    return data;
-}
-            }
-        );
+
+    /* =========================================================
+       SUPABASE ACTIVATION
+       ========================================================= */
+
+    async function redeemActivationCode(code) {
+
+        const customerId =
+            getCustomerId();
+
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/rpc/redeem_activation",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        "apikey":
+                            SUPABASE_PUBLISHABLE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_PUBLISHABLE_KEY
+                    },
+
+                    body: JSON.stringify({
+                        p_code: code,
+                        p_customer_id: customerId
+                    })
+                }
+            );
+
 
         let data = null;
+
+
         try {
-            data = await response.json();
-        } catch (_) {}
+
+            data =
+                await response.json();
+
+        } catch (error) {
+
+            console.error(
+                "Response JSON error:",
+                error
+            );
+        }
+
+
+        /*
+            Supabase can return either an object
+            or a one-row array depending on RPC
+            configuration.
+        */
+
+        if (Array.isArray(data)) {
+
+            data =
+                data.length
+                    ? data[0]
+                    : null;
+        }
+
 
         if (!response.ok) {
+
             throw new Error(
                 data && data.message
                     ? data.message
@@ -323,64 +1139,165 @@
             );
         }
 
+
         return data;
     }
 
-    activateBtn.addEventListener("click", async function () {
-        const code = activationInput.value.trim().toUpperCase();
 
-        if (!code) {
-            activationStatus.style.color = "#ff9100";
-            activationStatus.textContent =
-                "Please enter an activation code.";
-            return;
-        }
+    /* =========================================================
+       ACTIVATE BUTTON
+       ========================================================= */
 
-        activateBtn.disabled = true;
-        activateBtn.textContent = "Checking...";
-        activationStatus.style.color = "#ffcc00";
-        activationStatus.textContent = "Checking activation code...";
+    activateBtn.addEventListener(
+        "click",
+        async function () {
 
-        try {
-            const result = await redeemActivationCode(code);
+            const code =
+                activationInput.value
+                    .trim()
+                    .toUpperCase();
 
-            if (result && result.success === true) {
-                const addedCredits = Number(result.credits_added) || 0;
 
-                credits += addedCredits;
-                localStorage.setItem(TIER_KEY, "premium");
-                updateCredits();
+            if (!code) {
 
-                activationStatus.style.color = "#00e676";
+                activationStatus.style.color =
+                    "#ff9100";
+
                 activationStatus.textContent =
-                    "Activation successful: +" +
-                    addedCredits +
-                    " credits added.";
+                    "Please enter an activation code.";
 
-                activationInput.value = "";
-            } else {
-                activationStatus.style.color = "#ff3d00";
-                activationStatus.textContent =
-                    (result && result.message) ||
-                    "Invalid or already used activation code.";
+                return;
             }
-        } catch (error) {
-            console.error("Activation error:", error);
-            activationStatus.style.color = "#ff3d00";
-            activationStatus.textContent =
-                "Activation server error. Please try again.";
-        } finally {
-            activateBtn.disabled = false;
-            activateBtn.textContent = "Activate";
-        }
-    });
 
-    activationInput.addEventListener("keydown", function (event) {
-        if (event.key === "Enter") activateBtn.click();
-    });
+
+            activateBtn.disabled =
+                true;
+
+            activateBtn.textContent =
+                "Checking...";
+
+
+            activationStatus.style.color =
+                "#ffcc00";
+
+            activationStatus.textContent =
+                "Checking activation code...";
+
+
+            try {
+
+                const result =
+                    await redeemActivationCode(code);
+
+
+                if (
+                    result &&
+                    result.success === true
+                ) {
+
+                    const addedCredits =
+                        Number(
+                            result.credits_added
+                        ) || 0;
+
+
+                    /*
+                        Add credits locally only after
+                        Supabase confirms success.
+                    */
+
+                    credits +=
+                        addedCredits;
+
+
+                    localStorage.setItem(
+                        TIER_KEY,
+                        "premium"
+                    );
+
+
+                    updateCredits();
+
+
+                    activationStatus.style.color =
+                        "#00e676";
+
+                    activationStatus.textContent =
+                        "Activation successful: +" +
+                        addedCredits +
+                        " credits added.";
+
+
+                    activationInput.value =
+                        "";
+
+                } else {
+
+                    activationStatus.style.color =
+                        "#ff3d00";
+
+                    activationStatus.textContent =
+                        (
+                            result &&
+                            result.message
+                        ) ||
+                        "Invalid or already used activation code.";
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Activation error:",
+                    error
+                );
+
+
+                activationStatus.style.color =
+                    "#ff3d00";
+
+                activationStatus.textContent =
+                    error.message ||
+                    "Activation server error. Please try again.";
+
+            } finally {
+
+                activateBtn.disabled =
+                    false;
+
+                activateBtn.textContent =
+                    "Activate";
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       ENTER KEY FOR ACTIVATION
+       ========================================================= */
+
+    activationInput.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Enter") {
+
+                event.preventDefault();
+
+                activateBtn.click();
+            }
+        }
+    );
+
+
+    /* =========================================================
+       INITIAL DISPLAY
+       ========================================================= */
 
     updateCredits();
+
 })();
+
 </script>
 
 </body>
