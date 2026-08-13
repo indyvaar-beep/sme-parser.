@@ -240,7 +240,7 @@
                         font-weight:bold;
                     "
                 >
-                    Parsing Credits Remaining: 3 Free Tries
+                    Parsing Credits Remaining: Checking...
                 </span>
             </div>
 
@@ -639,19 +639,15 @@
 
 
     /* =========================================================
-       LOCAL CREDIT STATE
+       SERVER CREDIT STATE
        ========================================================= */
 
-    let credits =
-        Number(localStorage.getItem(CREDIT_KEY));
+    /*
+       The browser only keeps a display copy.
+       Supabase is the source of truth for credits.
+    */
 
-
-    if (
-        !Number.isFinite(credits) ||
-        credits < 0
-    ) {
-        credits = FREE_START;
-    }
+    let credits = 0;
 
 
     /* =========================================================
@@ -710,10 +706,6 @@
         }
 
 
-        localStorage.setItem(
-            CREDIT_KEY,
-            String(credits)
-        );
     }
 
 
@@ -949,74 +941,155 @@
 
     extractBtn.addEventListener(
         "click",
-        function () {
+        async function () {
 
-            if (credits <= 0) {
+            /*
+                Step 5:
+                Supabase is the source of truth.
+                The browser must NOT decide the real balance.
+            */
+
+            extractBtn.disabled = true;
+            extractBtn.textContent = "Checking credits...";
+
+
+            try {
+
+                const balance =
+                    await getServerCredits();
+
+
+                if (
+                    !balance ||
+                    balance.success !== true
+                ) {
+
+                    throw new Error(
+                        balance && balance.message
+                            ? balance.message
+                            : "Could not read your credit balance."
+                    );
+                }
+
+
+                credits =
+                    Number(balance.credits) || 0;
+
+                updateCredits();
+
+
+                if (credits <= 0) {
+
+                    activationStatus.style.color =
+                        "#ff3d00";
+
+                    activationStatus.textContent =
+                        "No parsing credits remaining. " +
+                        "Activate a top-up code.";
+
+                    return;
+                }
+
+
+                const text =
+                    rawInput.value.trim();
+
+
+                if (!text) {
+
+                    activationStatus.style.color =
+                        "#ff9100";
+
+                    activationStatus.textContent =
+                        "Please paste an invoice or receipt first.";
+
+                    rawInput.focus();
+
+                    return;
+                }
+
+
+                const items =
+                    parseInput(text);
+
+
+                if (!items.length) {
+
+                    activationStatus.style.color =
+                        "#ff9100";
+
+                    activationStatus.textContent =
+                        "No matching items found. " +
+                        "Try the Load Sample button.";
+
+                    return;
+                }
+
+
+                /*
+                    Parsing succeeded in memory.
+                    Now atomically consume exactly ONE
+                    server-side credit.
+
+                    The result is rendered only after
+                    Supabase confirms the deduction.
+                */
+
+                const consumed =
+                    await consumeServerCredit();
+
+
+                if (
+                    !consumed ||
+                    consumed.success !== true
+                ) {
+
+                    throw new Error(
+                        consumed && consumed.message
+                            ? consumed.message
+                            : "Credit could not be consumed."
+                    );
+                }
+
+
+                credits =
+                    Number(
+                        consumed.credits_remaining
+                    ) || 0;
+
+
+                renderRows(items);
+
+                updateCredits();
+
+
+                activationStatus.style.color =
+                    "#00e676";
+
+                activationStatus.textContent =
+                    "Extraction completed successfully.";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Extraction error:",
+                    error
+                );
+
 
                 activationStatus.style.color =
                     "#ff3d00";
 
                 activationStatus.textContent =
-                    "No parsing credits remaining. " +
-                    "Activate a top-up code.";
+                    error.message ||
+                    "Unable to process extraction. Please try again.";
 
-                return;
+            } finally {
+
+                extractBtn.disabled = false;
+                extractBtn.textContent = "⚡ AI Extract";
             }
-
-
-            const text =
-                rawInput.value.trim();
-
-
-            if (!text) {
-
-                activationStatus.style.color =
-                    "#ff9100";
-
-                activationStatus.textContent =
-                    "Please paste an invoice or receipt first.";
-
-                rawInput.focus();
-
-                return;
-            }
-
-
-            const items =
-                parseInput(text);
-
-
-            if (!items.length) {
-
-                activationStatus.style.color =
-                    "#ff9100";
-
-                activationStatus.textContent =
-                    "No matching items found. " +
-                    "Try the Load Sample button.";
-
-                return;
-            }
-
-
-            renderRows(items);
-
-
-            /*
-                Only deduct one credit AFTER
-                successful parsing.
-            */
-
-            credits -= 1;
-
-            updateCredits();
-
-
-            activationStatus.style.color =
-                "#00e676";
-
-            activationStatus.textContent =
-                "Extraction completed successfully.";
         }
     );
 
@@ -1061,6 +1134,160 @@
 
 
         return customerId;
+    }
+
+
+    /* =========================================================
+       SERVER CREDIT FUNCTIONS
+       ========================================================= */
+
+    async function getServerCredits() {
+
+        const customerId =
+            getCustomerId();
+
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/rpc/get_customer_credits",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        "apikey":
+                            SUPABASE_PUBLISHABLE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_PUBLISHABLE_KEY
+                    },
+
+                    body: JSON.stringify({
+                        p_customer_id: customerId
+                    })
+                }
+            );
+
+
+        let data = null;
+
+
+        try {
+
+            data =
+                await response.json();
+
+        } catch (error) {
+
+            console.error(
+                "Credit balance JSON error:",
+                error
+            );
+        }
+
+
+        /*
+            Supabase may return either an object
+            or a one-row array depending on RPC
+            configuration.
+        */
+
+        if (Array.isArray(data)) {
+
+            data =
+                data.length
+                    ? data[0]
+                    : null;
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data && data.message
+                    ? data.message
+                    : "Could not contact the credit server."
+            );
+        }
+
+
+        return data;
+    }
+
+
+    async function consumeServerCredit() {
+
+        const customerId =
+            getCustomerId();
+
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/rpc/consume_credit",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        "apikey":
+                            SUPABASE_PUBLISHABLE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_PUBLISHABLE_KEY
+                    },
+
+                    body: JSON.stringify({
+                        p_customer_id: customerId
+                    })
+                }
+            );
+
+
+        let data = null;
+
+
+        try {
+
+            data =
+                await response.json();
+
+        } catch (error) {
+
+            console.error(
+                "Consume credit JSON error:",
+                error
+            );
+        }
+
+
+        if (Array.isArray(data)) {
+
+            data =
+                data.length
+                    ? data[0]
+                    : null;
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data && data.message
+                    ? data.message
+                    : "Could not contact the credit server."
+            );
+        }
+
+
+        return data;
     }
 
 
@@ -1205,12 +1432,30 @@
 
 
                     /*
-                        Add credits locally only after
-                        Supabase confirms success.
+                        Supabase has already added the credits.
+                        Refresh the real server-side balance
+                        instead of adding credits locally.
                     */
 
-                    credits +=
-                        addedCredits;
+                    const balance =
+                        await getServerCredits();
+
+
+                    if (
+                        !balance ||
+                        balance.success !== true
+                    ) {
+
+                        throw new Error(
+                            balance && balance.message
+                                ? balance.message
+                                : "Activation succeeded, but the balance could not be refreshed."
+                        );
+                    }
+
+
+                    credits =
+                        Number(balance.credits) || 0;
 
 
                     localStorage.setItem(
@@ -1297,7 +1542,41 @@
        INITIAL DISPLAY
        ========================================================= */
 
+    /*
+        Initial balance is loaded from Supabase.
+        The browser never trusts its old local credit value.
+    */
+
     updateCredits();
+
+    getServerCredits()
+        .then(function (balance) {
+
+            if (
+                balance &&
+                balance.success === true
+            ) {
+
+                credits =
+                    Number(balance.credits) || 0;
+
+                updateCredits();
+            }
+
+        })
+        .catch(function (error) {
+
+            console.error(
+                "Initial credit load error:",
+                error
+            );
+
+            activationStatus.style.color =
+                "#ff9100";
+
+            activationStatus.textContent =
+                "Unable to load credit balance. Please refresh and try again.";
+        });
 
 })();
 
