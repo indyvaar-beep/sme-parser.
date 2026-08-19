@@ -194,29 +194,25 @@
             display: block;
         }
 
-        .qr-image {
-            width: 180px;
-            height: 180px;
-            object-fit: contain;
-            background: #ffffff;
-            border: 5px solid #ffffff;
-            border-radius: 8px;
-        }
-
         .divider {
             color: #64748b;
             font-weight: bold;
             margin: 25px 0;
         }
 
-        .bank-details {
-            background: #0d1614;
-            border: 1px solid #1f362e;
+        .toyyibpay-button {
+            display: inline-block;
+            background: #00e676;
+            color: #000000;
+            text-decoration: none;
+            padding: 13px 22px;
             border-radius: 6px;
-            padding: 15px;
-            text-align: left;
-            font-family: monospace;
-            line-height: 1.8;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .toyyibpay-button:hover {
+            background: #00c864;
         }
 
         .price {
@@ -471,8 +467,8 @@
         </h3>
 
         <p>
-            Purchase a 50-credit expansion packet and activate
-            your unique code after payment.
+            Purchase a 50-credit expansion packet securely through ToyyibPay.
+            After payment verification, you will receive a unique activation code.
         </p>
 
         <div class="price">
@@ -482,63 +478,31 @@
 
         <div class="payment-box">
 
-
-            <!-- OPTION 1 -->
             <div class="payment-option">
 
                 <span class="payment-title">
-                    Option 1: Scan via MAE App / DuitNow
+                    Secure Online Payment
                 </span>
 
-                <img
-                    src="maybank-qr.png"
-                    alt="Maybank DuitNow QR"
-                    class="qr-image"
-                >
-
-                <p class="muted">
-                    Scan the QR code using your banking app.
+                <p>
+                    Pay <strong>RM20.00</strong> for your
+                    <strong>50-credit expansion packet</strong>.
                 </p>
 
-            </div>
+                <a
+                    id="toyyibPayBtn"
+                    href="https://toyyibpay.com/SME-Smart-Parser-50-Credits"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="toyyibpay-button"
+                >
+                    💳 Pay RM20.00 via ToyyibPay
+                </a>
 
-
-            <div class="divider">
-                — OR DIRECT TRANSFER —
-            </div>
-
-
-            <!-- OPTION 2 -->
-            <div class="payment-option">
-
-                <span class="payment-title">
-                    Option 2: Direct Banking Details
-                </span>
-
-                <div class="bank-details">
-
-                    <p>
-                        <strong>Bank:</strong>
-                        Maybank
-                    </p>
-
-                    <p>
-                     <strong>Account Holder:</strong>
-Indyvaar Mani
-                    </p>
-<strong>Account Number:</strong>
-
-                    <p>
-                        <strong>Amount:</strong>
-                        RM20.00
-                    </p>
-
-                    <p>
-                        <strong>Package:</strong>
-                        50 Credits
-                    </p>
-
-                </div>
+                <p class="muted" style="margin-top:12px;">
+                    You will be taken to the ToyyibPay payment page.
+                    Keep your payment receipt after completing payment.
+                </p>
 
             </div>
 
@@ -555,8 +519,8 @@ Indyvaar Mani
             <ol>
 
                 <li>
-                    Pay <strong>RM20.00</strong> using the QR code
-                    or Maybank transfer.
+                    Click <strong>Pay RM20.00 via ToyyibPay</strong> and
+                    complete the online payment.
                 </li>
 
                 <li>
@@ -564,8 +528,7 @@ Indyvaar Mani
                 </li>
 
                 <li>
-                    Send the payment receipt through your
-                    chosen support channel.
+                    Keep your ToyyibPay payment receipt for verification.
                 </li>
 
                 <li>
