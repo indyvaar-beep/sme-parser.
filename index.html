@@ -1692,28 +1692,29 @@
 
             try {
 
-                const response =
-                    await fetch(
-                        SUPABASE_URL +
-                        "/functions/v1/create-toyyibpay-bill",
-                        {
-                            method: "POST",
+             const response =
+    await fetch(
+        SUPABASE_URL +
+        "/functions/v1/create-toyyibpay-bill",
+        {
+            method: "POST",
 
-                            headers: {
-                                "Content-Type":
-                                    "application/json",
+            headers: {
+                "Content-Type":
+                    "application/json",
 
-                                "apikey":
-                                    SUPABASE_PUBLISHABLE_KEY
-                            },
+                "apikey":
+                    SUPABASE_PUBLISHABLE_KEY
+            },
 
-                            body: JSON.stringify({
-                                email: email.trim(),
-                                name: name.trim(),
-                                phone: phone.trim()
-                            })
-                        }
-                    );
+            body: JSON.stringify({
+                customerId: getCustomerId(),
+                email: email.trim(),
+                name: name.trim(),
+                phone: phone.trim()
+            })
+        }
+    );
 
                 const result =
                     await response.json();
