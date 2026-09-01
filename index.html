@@ -1007,72 +1007,83 @@
        GET SERVER CREDITS
        ========================================================= */
 
-   async function getServerCredits() {
-  const customerId = getCustomerId();
+async function getServerCredits() {
 
-  if (!customerId) {
-    return {
-      success: false,
-      message: "Customer ID is missing.",
-    };
-  }
+    const customerId = getCustomerId();
 
-  try {
-    const response = await fetch(
-      SUPABASE_URL +
-        "/functions/v1/get_customer_credits",
-      {
-        method: "POST",
-
-    headers: {
-    "Content-Type": "application/json",
-    "apikey": SUPABASE_PUBLISHABLE_KEY
-},
-        },
-
-        body: JSON.stringify({
-          p_customer_id: customerId,
-        }),
-      }
-    );
-
-    let data = null;
+    if (!customerId) {
+        return {
+            success: false,
+            message: "Customer ID is missing."
+        };
+    }
 
     try {
-      data = await response.json();
+
+        const response = await fetch(
+            SUPABASE_URL +
+            "/functions/v1/get_customer_credits",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "apikey": SUPABASE_PUBLISHABLE_KEY,
+                    "Authorization":
+                        "Bearer " +
+                        SUPABASE_PUBLISHABLE_KEY
+                },
+
+                body: JSON.stringify({
+                    p_customer_id: customerId
+                })
+            }
+        );
+
+        let data = null;
+
+        try {
+
+            data = await response.json();
+
+        } catch (error) {
+
+            console.error(
+                "Credit balance JSON error:",
+                error
+            );
+
+        }
+
+        if (!response.ok) {
+
+            throw new Error(
+                data && data.message
+                    ? data.message
+                    : "Could not contact the credit server."
+            );
+
+        }
+
+        return data;
+
     } catch (error) {
-      console.error(
-        "Credit balance JSON error:",
-        error
-      );
+
+        console.error(
+            "Get customer credits error:",
+            error
+        );
+
+        return {
+            success: false,
+            message:
+                error instanceof Error
+                    ? error.message
+                    : "Credit server error."
+        };
+
     }
-
-    if (!response.ok) {
-      throw new Error(
-        data && data.message
-          ? data.message
-          : "Could not contact the credit server."
-      );
-    }
-
-    return data;
-
-  } catch (error) {
-    console.error(
-      "Get customer credits error:",
-      error
-    );
-
-    return {
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Credit server error.",
-    };
-  }
 }
-
     
 
 
