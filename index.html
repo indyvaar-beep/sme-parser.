@@ -690,6 +690,45 @@ googleSignInBtn.addEventListener(
 
         try {
 
+            const { data } =
+                await supabaseClient.auth.getSession();
+
+            const session = data.session;
+
+
+            /* =================================================
+               LOG OUT
+               ================================================= */
+
+            if (session) {
+
+                googleSignInBtn.disabled = true;
+
+                googleSignInBtn.textContent =
+                    "Signing out...";
+
+                const { error } =
+                    await supabaseClient.auth.signOut({
+                        scope: "local"
+                    });
+
+                if (error) {
+                    throw error;
+                }
+
+                return;
+            }
+
+
+            /* =================================================
+               LOG IN WITH GOOGLE
+               ================================================= */
+
+            googleSignInBtn.disabled = true;
+
+            googleSignInBtn.textContent =
+                "Connecting to Google...";
+
             const { error } =
                 await supabaseClient.auth.signInWithOAuth({
                     provider: "google",
@@ -701,32 +740,31 @@ googleSignInBtn.addEventListener(
                 });
 
             if (error) {
-                console.error(
-                    "Google Sign-In Error:",
-                    error
-                );
-
-                activationStatus.textContent =
-                    "Google Sign-In failed. Please try again.";
-
+                throw error;
             }
 
         } catch (error) {
 
             console.error(
-                "Google Sign-In Exception:",
+                "Google authentication error:",
                 error
             );
 
-            activationStatus.textContent =
-                "Unable to start Google Sign-In.";
+            activationStatus.style.color =
+                "#ff3d00";
 
+            activationStatus.textContent =
+                error.message ||
+                "Google authentication failed.";
+
+            googleSignInBtn.disabled = false;
+
+            googleSignInBtn.textContent =
+                "🔐 Sign in with Google";
         }
 
     }
-);
-
-    /* =========================================================
+);/* =========================================================
        SETTINGS
        ========================================================= */
 
@@ -754,7 +792,72 @@ const supabaseClient =
         SUPABASE_URL,
         SUPABASE_PUBLISHABLE_KEY
     );
-    
+   /* =========================================================
+   GOOGLE LOGIN / LOGOUT UI
+   ========================================================= */
+
+async function updateGoogleAuthButton(session) {
+
+    if (session && session.user) {
+
+        const email =
+            session.user.email || "Google User";
+
+        googleSignInBtn.textContent =
+            "🚪 Sign Out (" + email + ")";
+
+        googleSignInBtn.style.background =
+            "#ffcc00";
+
+    } else {
+
+        googleSignInBtn.textContent =
+            "🔐 Sign in with Google";
+
+        googleSignInBtn.style.background =
+            "#00e676";
+    }
+}
+
+
+/* =========================================================
+   AUTH STATE LISTENER
+   ========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+    function (event, session) {
+
+        console.log(
+            "Auth event:",
+            event
+        );
+
+        updateGoogleAuthButton(session);
+
+    }
+);
+
+
+/* =========================================================
+   CHECK EXISTING LOGIN
+   ========================================================= */
+
+supabaseClient.auth.getSession()
+    .then(function (result) {
+
+        updateGoogleAuthButton(
+            result.data.session
+        );
+
+    })
+    .catch(function (error) {
+
+        console.error(
+            "Session check error:",
+            error
+        );
+
+    }); 
 
 
 
